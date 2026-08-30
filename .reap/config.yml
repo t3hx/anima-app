@@ -1,0 +1,8 @@
+project: anima
+language: french
+autoSubagent: true
+strictEdit: false
+strictMerge: false
+agentClient: claude-code
+autoUpdate: true
+autoIssueReport: true

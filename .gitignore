@@ -1,0 +1,5 @@
+# REAP code index — derived, and self-referential if committed
+.reap/.index/
+
+# macOS
+.DS_Store

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#efe9df;font-family:'Instrument Sans',system-ui,sans-serif}a{color:#b9622f}a:hover{color:#8f4f2b}.fr{padding:38px 44px 30px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.fh{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}.oid{font:600 10.5px 'IBM Plex Mono',monospace;padding:3px 7px;background:rgba(43,33,24,.1);color:#2b2118;border-radius:5px;text-decoration:none}.ft{font:600 14px/1.2 'Instrument Sans',sans-serif;color:#2b2118}.note{max-width:900px;margin:0 0 18px;font:400 12px/1.55 'Instrument Sans',sans-serif;color:rgba(43,33,24,.6)}.frame{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 2px 10px rgba(43,33,24,.1);overflow:hidden}.fr:target .oid{background:#c05f2e;color:#fff}</style></helmet>
+
+<div style="padding:34px 44px 8px">
+  <div style="font:600 20px 'Instrument Sans';color:#2b2118">Anima Lab — écrans selon <a class="oid" href="#1a" style="font-size:11px">1a</a> « Braise »</div>
+  <div class="note" style="margin-top:8px">Direction affinée : <b>banc d'essai</b> — graduations sur les bords de scène, mesures affichées en permanence (x, t, fps), la grille au sol structure aussi la jauge de scroll et les vignettes de courbe. Familles différenciées par teinte à chroma/luminosité constantes : natif = ambre, GSAP = coral, shaders = rose. Monospace = uniquement ce qui est du code réel.</div>
+</div>
+
+<!-- ============ 2a TOKENS ============ -->
+<section class="fr" id="2a">
+<div class="fh"><a class="oid" href="#2a">2a</a><span class="ft">Tokens — couleurs, type, espacement, rayons, mouvement</span></div>
+<p class="note">7 couleurs nommées + 2 accents de famille. Les trois accents partagent chroma et luminosité (oklch ≈ 0.76 / 0.13), seule la teinte varie.</p>
+<div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc;padding:26px 28px;display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">COULEURS</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#14100d;border:1px solid rgba(242,233,220,.1)"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">braise-950</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#14100D</div><div style="font-size:10.5px;color:#a2907c">fond code, overlays</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#1c1815;border:1px solid rgba(242,233,220,.1)"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">braise-900</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#1C1815</div><div style="font-size:10.5px;color:#a2907c">fond application</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#26211c;border:1px solid rgba(242,233,220,.1)"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">braise-800</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#26211C</div><div style="font-size:10.5px;color:#a2907c">cartes, rail</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#1c1815;border:1px solid rgba(242,233,220,.35);background-image:repeating-linear-gradient(0deg,rgba(242,233,220,.08) 0 1px,transparent 1px 12px)"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">ligne</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">encre 8%</div><div style="font-size:10.5px;color:#a2907c">bordures, graduations</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#f2e9dc"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">encre</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#F2E9DC</div><div style="font-size:10.5px;color:#a2907c">texte principal</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#a2907c"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">encre-sourde</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#A2907C</div><div style="font-size:10.5px;color:#a2907c">gloses, labels</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#f09d5a"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">ambre</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#F09D5A</div><div style="font-size:10.5px;color:#a2907c">accent · Socle natif</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#ee6c4d"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">coral</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#EE6C4D</div><div style="font-size:10.5px;color:#a2907c">accent · GSAP</div></div>
+      <div style="width:118px"><div style="height:64px;border-radius:9px;background:#d96a8f"></div><div style="font:600 10.5px 'IBM Plex Mono';margin-top:6px">rose</div><div style="font:400 10px 'IBM Plex Mono';color:#a2907c">#D96A8F</div><div style="font-size:10.5px;color:#a2907c">accent · Shaders</div></div>
+    </div>
+    <div style="font-size:11px;color:#a2907c">Matière par famille : natif = tracé fin et net · GSAP = trajectoire et rémanence (fantômes) · shaders = grain et diffusion (bruit léger sur les fonds de scène).</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:28px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">TYPOGRAPHIE — Instrument Sans (interface) · IBM Plex Mono (code réel uniquement)</div>
+      <div style="display:flex;flex-direction:column;gap:9px;background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:12px;padding:16px 18px">
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:600 22px 'Instrument Sans'">Titre d'écran</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">sans 600 · 22</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:600 13px 'Instrument Sans'">Libellé de contrôle</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">sans 600 · 13</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 12.5px/1.55 'Instrument Sans'">Corps de texte, panneau Concept</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">sans 400 · 12.5/1.55</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 11px 'Instrument Sans';color:#a2907c">glose française sous le libellé technique</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">sans 400 · 11 · encre-sourde</span></div>
+        <div style="height:1px;background:rgba(242,233,220,.08)"></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">LABEL DE BLOC</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">mono 600 · 10 · +14%</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:600 13px 'IBM Plex Mono'">valeur 2.0</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">mono 600 · 13</span></div>
+        <div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 11px 'IBM Plex Mono'">gsap.from(mesh.position, …)</span><span style="font:400 10px 'IBM Plex Mono';color:#a2907c">mono 400 · 11</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">ESPACEMENT</div>
+        <div style="display:flex;align-items:flex-end;gap:10px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:4px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">4</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:6px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">6</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:8px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">8</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:12px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">12</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:16px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">16</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:24px;height:26px;background:#f09d5a;border-radius:2px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">24</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">RAYONS</div>
+        <div style="display:flex;gap:10px;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:34px;height:34px;border:1px solid #a2907c;border-radius:6px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">6 champ</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:34px;height:34px;border:1px solid #a2907c;border-radius:10px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">10 carte-ctrl</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:34px;height:34px;border:1px solid #a2907c;border-radius:14px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">14 bloc</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:52px;height:26px;border:1px solid #a2907c;border-radius:99px"></div><span style="font:400 9.5px 'IBM Plex Mono';color:#a2907c">pill</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">MOUVEMENT D'INTERFACE</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font:400 10.5px 'IBM Plex Mono';color:#d8c9b8">
+          <div>hover/press · 120ms · cubic-bezier(.2,.7,.2,1)</div>
+          <div>sélection, onglets · 200ms · idem</div>
+          <div>panneau, tiroir code · 320ms · cubic-bezier(.3,.8,.3,1)</div>
+        </div>
+        <div style="font-size:11px;color:#a2907c;line-height:1.5">Règle : la scène est la seule chose qui a le droit de bouger fort. Aucune interface animée pendant qu'une démo joue, hors feedback direct du contrôle manipulé.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2b ÉCRAN DE RÉFÉRENCE ============ -->
+<section class="fr" id="2b">
+<div class="fh"><a class="oid" href="#2b">2b</a><span class="ft">Écran de référence — leçon type A, transport temporel, fantômes, code déplié</span></div>
+<p class="note">Nouveautés vs <a class="oid" href="#1a">1a</a> : nav 2 niveaux · graduations + mesures en direct (banc d'essai) · bascule moteur WebGL/CSS · calque de fantômes (une copie translucide / 100 ms — en power1.out elles s'entassent à l'arrivée, opacité 24% → 7% en s'éloignant) · code déplié avec la ligne <span style="font-family:'IBM Plex Mono';font-size:11px">x: 10</span> mise en évidence pendant le réglage du curseur Départ · pastille « non lu » sur Concept.</p>
+<div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:50px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+    <div style="display:flex;align-items:center;gap:10px"><div style="width:16px;height:16px;background:#f09d5a;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><div style="font-weight:700;font-size:15px">Anima Lab</div></div>
+    <div style="display:flex;gap:22px">
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:2px solid #f09d5a"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span><span style="font-size:12.5px;font-weight:600">Socle natif</span></div>
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#ee6c4d;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">GSAP</span></div>
+      <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#d96a8f;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">Shaders</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="display:flex;align-items:center;gap:7px"><div style="width:30px;height:17px;border-radius:99px;background:rgba(242,233,220,.12);position:relative"><div style="position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#a2907c"></div></div><span style="font:500 10px 'IBM Plex Mono';color:#a2907c">motion réduit</span></div>
+      <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">2 / 25</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">01</span><span style="font-size:12px;color:#a2907c">Pipeline de rendu</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:rgba(240,157,90,.12);border:1px solid rgba(240,157,90,.35)"><span style="font:600 9.5px 'IBM Plex Mono';color:#f0b678">02</span><span style="font-size:12px;font-weight:600">Anatomie d'un tween</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">03</span><span style="font-size:12px;color:#a2907c">Courbes d'easing</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">04</span><span style="font-size:12px;color:#a2907c">Transition vs keyframes</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">05</span><span style="font-size:12px;color:#a2907c">Transform &amp; perspective</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">06</span><span style="font-size:12px;color:#a2907c">WAAPI</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">07</span><span style="font-size:12px;color:#a2907c">Non-interpolables</span></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">08</span><span style="font-size:12px;color:#a2907c">Scroll</span></div>
+    <span style="font-size:11px;color:#7d6e5c">…</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 344px;gap:14px;padding:14px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="position:relative;height:566px;border-radius:14px;overflow:hidden;border:1px solid rgba(242,233,220,.07);background:radial-gradient(120% 90% at 50% 28%,#251d16 0%,#161210 72%)">
+        <div style="position:absolute;left:-15%;right:-15%;bottom:-30px;height:52%;transform:perspective(700px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(240,157,90,.16) 0 1px,transparent 1px 58px),repeating-linear-gradient(0deg,rgba(240,157,90,.12) 0 1px,transparent 1px 44px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+        <div style="position:absolute;left:14px;top:40px;bottom:56px;width:7px;background:repeating-linear-gradient(0deg,rgba(242,233,220,.14) 0 1px,transparent 1px 22px)"></div>
+        <div style="position:absolute;left:14px;right:14px;bottom:46px;height:7px;background:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 22px)"></div>
+        <div style="position:absolute;left:14px;bottom:30px;font:400 9px 'IBM Plex Mono';color:#7d6e5c">0</div>
+        <div style="position:absolute;left:38%;bottom:30px;font:400 9px 'IBM Plex Mono';color:#7d6e5c">5</div>
+        <div style="position:absolute;left:62%;bottom:30px;font:400 9px 'IBM Plex Mono';color:#7d6e5c">10</div>
+        <div style="position:absolute;left:20%;top:38.5%;width:100px;height:116px;opacity:.07"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+        <div style="position:absolute;left:31%;top:38.5%;width:100px;height:116px;opacity:.10"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+        <div style="position:absolute;left:39.5%;top:38.5%;width:100px;height:116px;opacity:.14"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+        <div style="position:absolute;left:45%;top:38.5%;width:100px;height:116px;opacity:.18"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+        <div style="position:absolute;left:48.6%;top:38.5%;width:100px;height:116px;opacity:.24"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+        <div style="position:absolute;left:51%;top:52%;width:140px;height:24px;transform:translateX(-6%);background:radial-gradient(50% 50% at 50% 50%,rgba(0,0,0,.5),transparent 70%)"></div>
+        <div style="position:absolute;left:51%;top:44%;width:112px;height:130px;transform:translateY(-58%)">
+          <div style="position:absolute;inset:0;background:#f8c98f;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+          <div style="position:absolute;inset:0;background:#e0854a;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+          <div style="position:absolute;inset:0;background:#a9542b;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+        </div>
+        <div style="position:absolute;top:14px;left:16px;display:flex;align-items:center;gap:10px">
+          <span style="font:600 10.5px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">NATIF.02 · ANATOMIE D'UN TWEEN</span>
+          <span style="font:500 10.5px 'IBM Plex Mono';padding:3px 8px;border-radius:6px;background:rgba(240,157,90,.14);color:#f0b678">position.x</span>
+        </div>
+        <div style="position:absolute;top:12px;right:14px;display:flex;align-items:center;gap:8px">
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12)">
+            <span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">moteur</span>
+            <span style="font:600 10px 'IBM Plex Mono';padding:2px 7px;border-radius:5px;background:rgba(240,157,90,.18);color:#f0b678">WebGL</span>
+            <span style="font:500 10px 'IBM Plex Mono';padding:2px 7px;color:#7d6e5c">CSS</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12)">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#f09d5a;color:#221507;font:700 10px 'IBM Plex Mono'">?</span>
+            <span style="font-size:12px;font-weight:600">Concept</span>
+            <span style="position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:#f09d5a;border:2px solid #161210"></span>
+          </div>
+        </div>
+        <div style="position:absolute;right:14px;bottom:58px;display:flex;gap:12px;padding:6px 11px;border-radius:8px;background:rgba(20,16,13,.75);border:1px solid rgba(242,233,220,.09);font:500 10px 'IBM Plex Mono'">
+          <span style="color:#f0b678">x&nbsp;3.42</span><span style="color:#a2907c">t&nbsp;0.76&nbsp;s</span><span style="color:#a2907c">60&nbsp;fps</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;height:52px;padding:0 14px;border-radius:12px;background:#26211c;border:1px solid rgba(242,233,220,.07)">
+        <div style="display:flex;gap:6px">
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(242,233,220,.06);font-size:12px">⏮</div>
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#f09d5a;color:#221507;font-size:12px">▶</div>
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(242,233,220,.06);font-size:12px">⟳</div>
+        </div>
+        <div style="flex:1;position:relative;height:16px">
+          <div style="position:absolute;left:0;right:0;top:50%;height:6px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1);background-image:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 10%)"></div>
+          <div style="position:absolute;left:0;top:50%;height:6px;width:38%;transform:translateY(-50%);border-radius:3px;background:linear-gradient(90deg,#b9622f,#f09d5a)"></div>
+          <div style="position:absolute;left:38%;top:50%;width:14px;height:14px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.5)"></div>
+        </div>
+        <div style="font:500 11px 'IBM Plex Mono';color:#a2907c">0.76 / 2.00 s</div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:rgba(242,233,220,.06)"><span style="font:600 11px 'IBM Plex Mono'">1×</span><span style="color:#a2907c;font-size:10px">▾</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:9px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">MÉTHODE</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 11px"><div style="font:600 12.5px 'IBM Plex Mono'">to</div><div style="font-size:11px;color:#a2907c">va vers</div></div>
+          <div style="border:1px solid #f09d5a;background:rgba(240,157,90,.1);border-radius:10px;padding:8px 11px"><div style="font:600 12.5px 'IBM Plex Mono';color:#f0b678">from</div><div style="font-size:11px;color:#cbb397">arrive de</div></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 11px"><div style="font:600 12.5px 'IBM Plex Mono'">fromTo</div><div style="font-size:11px;color:#a2907c">de … à …</div></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 11px"><div style="font:600 12.5px 'IBM Plex Mono'">set</div><div style="font-size:11px;color:#a2907c">sans trajet</div></div>
+        </div>
+      </div>
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:10px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">VALEURS</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Départ<span style="font-weight:400;color:#a2907c"> · x initial</span></span><span style="font:600 12.5px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:#1c1815;border:1px solid #f09d5a;color:#f0b678">10</span></div>
+          <div style="position:relative;height:14px">
+            <div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1);background-image:repeating-linear-gradient(90deg,rgba(242,233,220,.12) 0 1px,transparent 1px 12.5%)"></div>
+            <div style="position:absolute;left:0;top:50%;height:5px;width:62%;transform:translateY(-50%);border-radius:3px;background:#f09d5a"></div>
+            <div style="position:absolute;left:62%;top:50%;width:14px;height:14px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(240,157,90,.25)"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Durée<span style="font-weight:400;color:#a2907c"> · seconds</span></span><span style="font:600 12.5px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:#1c1815;border:1px solid rgba(242,233,220,.12)">2.0</span></div>
+          <div style="position:relative;height:14px">
+            <div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1)"></div>
+            <div style="position:absolute;left:0;top:50%;height:5px;width:40%;transform:translateY(-50%);border-radius:3px;background:rgba(240,157,90,.55)"></div>
+            <div style="position:absolute;left:40%;top:50%;width:13px;height:13px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;font-weight:600">Fantômes<span style="font-weight:400;color:#a2907c"> · trace du trajet</span></span>
+          <div style="width:32px;height:18px;border-radius:99px;background:#f09d5a;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#221507"></div></div>
+        </div>
+      </div>
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:9px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">COURBE</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;background-image:linear-gradient(rgba(242,233,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,233,220,.05) 1px,transparent 1px);background-size:11px 9px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 L42 2" fill="none" stroke="#a2907c" stroke-width="2"></path></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">linear</span></div>
+          <div style="border:1px solid #f09d5a;background:rgba(240,157,90,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 C18 24 28 4 42 2" fill="none" stroke="#f09d5a" stroke-width="2"></path><circle cx="30" cy="8.6" r="2.4" fill="#f6e3cd"></circle></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#f0b678">power1.out</span></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;background-image:linear-gradient(rgba(242,233,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,233,220,.05) 1px,transparent 1px);background-size:11px 9px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 C24 24 32 2 42 2" fill="none" stroke="#a2907c" stroke-width="2"></path></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">power2.out</span></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;background-image:linear-gradient(rgba(242,233,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,233,220,.05) 1px,transparent 1px);background-size:11px 9px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 C28 24 36 2 42 2" fill="none" stroke="#a2907c" stroke-width="2"></path></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">power3.out</span></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;background-image:linear-gradient(rgba(242,233,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,233,220,.05) 1px,transparent 1px);background-size:11px 9px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 C31 24 38 2 42 2" fill="none" stroke="#a2907c" stroke-width="2"></path></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">power4.out</span></div>
+          <div style="border:1px solid rgba(242,233,220,.1);border-radius:10px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;background-image:linear-gradient(rgba(242,233,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(242,233,220,.05) 1px,transparent 1px);background-size:11px 9px"><svg width="44" height="26" viewBox="0 0 44 26"><path d="M2 24 C15 19 29 7 42 2" fill="none" stroke="#a2907c" stroke-width="2"></path></svg><span style="font:500 9.5px 'IBM Plex Mono';color:#a2907c">sine.out</span></div>
+        </div>
+      </div>
+      <div style="background:#14100d;border:1px solid rgba(242,233,220,.08);border-radius:12px;overflow:hidden;margin-top:auto">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(242,233,220,.07)">
+          <span style="font:600 11px 'IBM Plex Mono';color:#f0b678">‹/›</span>
+          <div style="display:flex;gap:2px;padding:2px;border-radius:7px;background:rgba(242,233,220,.06)">
+            <span style="font:600 10px 'IBM Plex Mono';padding:3px 8px;border-radius:5px;color:#7d6e5c">CSS</span>
+            <span style="font:600 10px 'IBM Plex Mono';padding:3px 8px;border-radius:5px;background:#26211c;color:#f2e9dc">JS</span>
+          </div>
+          <span style="flex:1"></span>
+          <span style="font:600 10px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:rgba(240,157,90,.14);color:#f0b678">Copier</span>
+          <span style="color:#7d6e5c;font-size:10px">▴</span>
+        </div>
+        <div style="padding:10px 0;font:400 11px/1.7 'IBM Plex Mono'">
+          <div style="padding:0 14px;color:#d8c9b8">gsap.from(mesh.position, {</div>
+          <div style="padding:0 14px;background:rgba(240,157,90,.13);color:#f6e3cd">&nbsp;&nbsp;x: <b style="color:#f0b678">10</b>,</div>
+          <div style="padding:0 14px;color:#d8c9b8">&nbsp;&nbsp;duration: 2,</div>
+          <div style="padding:0 14px;color:#d8c9b8">&nbsp;&nbsp;ease: "power1.out"</div>
+          <div style="padding:0 14px;color:#d8c9b8">})</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2c COMPARAISON ============ -->
+<section class="fr" id="2c">
+<div class="fh"><a class="oid" href="#2c">2c</a><span class="ft">Écran de comparaison — scène divisée, étiquettes, indicateurs par moitié</span></div>
+<p class="note">Leçon « Pipeline de rendu » : <span style="font-family:'IBM Plex Mono';font-size:11px">left</span> vs <span style="font-family:'IBM Plex Mono';font-size:11px">translateX</span>, un seul jeu de contrôles pilote les deux moitiés. Séparation par filet pointillé vertical. Par moitié : fps en continu + pastilles layout · paint · composite qui s'allument quand l'étape est déclenchée. La moitié coûteuse s'assume : 34 fps affichés, pas de dramatisation.</p>
+<div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+    <div style="display:flex;align-items:center;gap:12px"><div style="width:14px;height:14px;background:#f09d5a;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><span style="font-weight:700;font-size:14px">Anima Lab</span><span style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">SOCLE NATIF · 01 PIPELINE DE RENDU</span></div>
+    <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">1 / 25</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 344px;gap:14px;padding:14px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="position:relative;height:560px;border-radius:14px;overflow:hidden;border:1px solid rgba(242,233,220,.07);display:grid;grid-template-columns:1fr 1fr">
+        <div style="position:relative;overflow:hidden;background:radial-gradient(140% 100% at 50% 28%,#251d16 0%,#161210 75%)">
+          <div style="position:absolute;left:-25%;right:-25%;bottom:-20px;height:50%;transform:perspective(600px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(240,157,90,.15) 0 1px,transparent 1px 48px),repeating-linear-gradient(0deg,rgba(240,157,90,.11) 0 1px,transparent 1px 38px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+          <div style="position:absolute;left:42%;top:41%;width:96px;height:112px;transform:translate(-50%,-55%)">
+            <div style="position:absolute;inset:0;background:#f8c98f;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+            <div style="position:absolute;inset:0;background:#e0854a;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+            <div style="position:absolute;inset:0;background:#a9542b;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+          </div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font:600 11px 'IBM Plex Mono';padding:4px 11px;border-radius:6px;background:rgba(38,33,28,.9);border:1px solid rgba(242,233,220,.14)">left</div>
+          <div style="position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-radius:9px;background:rgba(20,16,13,.8);border:1px solid rgba(242,233,220,.09)">
+            <span style="font:600 11px 'IBM Plex Mono';color:#f0b678">34 fps</span>
+            <div style="display:flex;gap:9px;font:500 9.5px 'IBM Plex Mono'">
+              <span style="display:flex;align-items:center;gap:4px;color:#f0b678"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span>layout</span>
+              <span style="display:flex;align-items:center;gap:4px;color:#f0b678"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span>paint</span>
+              <span style="display:flex;align-items:center;gap:4px;color:#f0b678"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span>composite</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative;overflow:hidden;background:radial-gradient(140% 100% at 50% 28%,#251d16 0%,#161210 75%);border-left:1px dashed rgba(242,233,220,.18)">
+          <div style="position:absolute;left:-25%;right:-25%;bottom:-20px;height:50%;transform:perspective(600px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(240,157,90,.15) 0 1px,transparent 1px 48px),repeating-linear-gradient(0deg,rgba(240,157,90,.11) 0 1px,transparent 1px 38px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+          <div style="position:absolute;left:36%;top:41%;width:96px;height:112px;opacity:.12;transform:translate(-50%,-55%)"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+          <div style="position:absolute;left:47%;top:41%;width:96px;height:112px;transform:translate(-50%,-55%)">
+            <div style="position:absolute;inset:0;background:#f8c98f;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+            <div style="position:absolute;inset:0;background:#e0854a;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+            <div style="position:absolute;inset:0;background:#a9542b;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+          </div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font:600 11px 'IBM Plex Mono';padding:4px 11px;border-radius:6px;background:rgba(38,33,28,.9);border:1px solid rgba(242,233,220,.14)">translateX</div>
+          <div style="position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-radius:9px;background:rgba(20,16,13,.8);border:1px solid rgba(242,233,220,.09)">
+            <span style="font:600 11px 'IBM Plex Mono';color:#f0b678">60 fps</span>
+            <div style="display:flex;gap:9px;font:500 9.5px 'IBM Plex Mono'">
+              <span style="display:flex;align-items:center;gap:4px;color:#7d6e5c"><span style="width:7px;height:7px;border-radius:50%;border:1px solid #7d6e5c"></span>layout</span>
+              <span style="display:flex;align-items:center;gap:4px;color:#7d6e5c"><span style="width:7px;height:7px;border-radius:50%;border:1px solid #7d6e5c"></span>paint</span>
+              <span style="display:flex;align-items:center;gap:4px;color:#f0b678"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span>composite</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;height:52px;padding:0 14px;border-radius:12px;background:#26211c;border:1px solid rgba(242,233,220,.07)">
+        <div style="display:flex;gap:6px">
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(242,233,220,.06);font-size:12px">⏮</div>
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#f09d5a;color:#221507;font-size:12px">▶</div>
+          <div style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(242,233,220,.06);font-size:12px">⟳</div>
+        </div>
+        <div style="flex:1;position:relative;height:16px">
+          <div style="position:absolute;left:0;right:0;top:50%;height:6px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1);background-image:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 10%)"></div>
+          <div style="position:absolute;left:0;top:50%;height:6px;width:52%;transform:translateY(-50%);border-radius:3px;background:linear-gradient(90deg,#b9622f,#f09d5a)"></div>
+          <div style="position:absolute;left:52%;top:50%;width:14px;height:14px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div>
+        </div>
+        <div style="font:500 11px 'IBM Plex Mono';color:#a2907c">1.04 / 2.00 s</div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:rgba(242,233,220,.06)"><span style="font:600 11px 'IBM Plex Mono'">0.5×</span><span style="color:#a2907c;font-size:10px">▾</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:10px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">VALEURS · pilotent les deux moitiés</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Distance<span style="font-weight:400;color:#a2907c"> · px parcourus</span></span><span style="font:600 12.5px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:#1c1815;border:1px solid rgba(242,233,220,.12)">240</span></div>
+          <div style="position:relative;height:14px"><div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1)"></div><div style="position:absolute;left:0;top:50%;height:5px;width:48%;transform:translateY(-50%);border-radius:3px;background:#f09d5a"></div><div style="position:absolute;left:48%;top:50%;width:13px;height:13px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Tuiles animées<span style="font-weight:400;color:#a2907c"> · charge</span></span><span style="font:600 12.5px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:#1c1815;border:1px solid rgba(242,233,220,.12)">48</span></div>
+          <div style="position:relative;height:14px"><div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1)"></div><div style="position:absolute;left:0;top:50%;height:5px;width:24%;transform:translateY(-50%);border-radius:3px;background:#f09d5a"></div><div style="position:absolute;left:24%;top:50%;width:13px;height:13px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;font-weight:600">Boucle A ↔ B</span>
+          <div style="width:32px;height:18px;border-radius:99px;background:#f09d5a;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#221507"></div></div>
+        </div>
+      </div>
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">LECTURE</div>
+        <div style="font-size:12px;line-height:1.55;color:#cbb397">Les pastilles indiquent les étapes du pipeline déclenchées à chaque image. <span style="font-family:'IBM Plex Mono';font-size:11px">left</span> traverse layout + paint + composite ; <span style="font-family:'IBM Plex Mono';font-size:11px">translateX</span> ne touche que composite.</div>
+      </div>
+      <div style="background:#14100d;border:1px solid rgba(242,233,220,.08);border-radius:12px;overflow:hidden;margin-top:auto">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(242,233,220,.07)">
+          <span style="font:600 11px 'IBM Plex Mono';color:#f0b678">‹/›</span>
+          <div style="display:flex;gap:2px;padding:2px;border-radius:7px;background:rgba(242,233,220,.06)">
+            <span style="font:600 10px 'IBM Plex Mono';padding:3px 8px;border-radius:5px;background:#26211c;color:#f2e9dc">CSS</span>
+            <span style="font:600 10px 'IBM Plex Mono';padding:3px 8px;border-radius:5px;color:#7d6e5c">JS</span>
+          </div>
+          <span style="flex:1"></span>
+          <span style="font:600 10px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:rgba(240,157,90,.14);color:#f0b678">Copier</span>
+          <span style="color:#7d6e5c;font-size:10px">▴</span>
+        </div>
+        <div style="padding:10px 0;font:400 11px/1.7 'IBM Plex Mono'">
+          <div style="padding:0 14px;color:#d8c9b8">/* moitié A */ left: 240px;</div>
+          <div style="padding:0 14px;color:#d8c9b8">/* moitié B */ transform:</div>
+          <div style="padding:0 14px;color:#d8c9b8">&nbsp;&nbsp;translateX(240px);</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2d SCROLL ============ -->
+<section class="fr" id="2d">
+<div class="fh"><a class="oid" href="#2d">2d</a><span class="ft">Écran scroll — jauge à la place du transport, poignées de plage (famille GSAP, accent coral)</span></div>
+<p class="note">La zone défilante a son propre scroll (pas celui de la page). La jauge reprend la grille : graduations 10 %, deux poignées losange définissent <span style="font-family:'IBM Plex Mono';font-size:11px">start</span> / <span style="font-family:'IBM Plex Mono';font-size:11px">end</span>, le trait vertical est la position courante. Même emplacement et même hauteur que le transport temporel.</p>
+<div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+    <div style="display:flex;align-items:center;gap:12px"><div style="width:14px;height:14px;background:#ee6c4d;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><span style="font-weight:700;font-size:14px">Anima Lab</span><span style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">GSAP · 06 SCROLLTRIGGER</span></div>
+    <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">16 / 25</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 344px;gap:14px;padding:14px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="position:relative;height:560px;border-radius:14px;overflow:hidden;border:1px solid rgba(242,233,220,.07);background:radial-gradient(120% 90% at 40% 28%,#251a14 0%,#161110 72%)">
+        <div style="position:absolute;left:-25%;right:20%;bottom:-20px;height:50%;transform:perspective(600px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(238,108,77,.15) 0 1px,transparent 1px 52px),repeating-linear-gradient(0deg,rgba(238,108,77,.11) 0 1px,transparent 1px 40px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+        <div style="position:absolute;left:30%;top:44%;width:108px;height:126px;transform:translate(-50%,-55%) rotate(8deg)">
+          <div style="position:absolute;inset:0;background:#f5947a;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+          <div style="position:absolute;inset:0;background:#e05a38;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+          <div style="position:absolute;inset:0;background:#a03c22;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+        </div>
+        <div style="position:absolute;left:30%;top:66%;transform:translateX(-50%);font:500 9.5px 'IBM Plex Mono';color:#9c8b7d">épinglé · rotation liée au scroll</div>
+        <div style="position:absolute;top:0;bottom:0;right:0;width:38%;background:rgba(20,15,12,.55);border-left:1px solid rgba(242,233,220,.09);padding:44px 18px 18px;display:flex;flex-direction:column;gap:12px">
+          <div style="font:600 9.5px 'IBM Plex Mono';letter-spacing:.12em;color:#9c8b7d">CONTENU DÉFILANT</div>
+          <div style="height:84px;border-radius:10px;background:rgba(242,233,220,.05);border:1px solid rgba(242,233,220,.08)"></div>
+          <div style="height:84px;border-radius:10px;background:rgba(238,108,77,.1);border:1px solid rgba(238,108,77,.4);display:flex;align-items:center;justify-content:center;font:500 10px 'IBM Plex Mono';color:#f0876b">section active</div>
+          <div style="height:84px;border-radius:10px;background:rgba(242,233,220,.05);border:1px solid rgba(242,233,220,.08)"></div>
+          <div style="height:84px;border-radius:10px;background:rgba(242,233,220,.05);border:1px solid rgba(242,233,220,.08);opacity:.5"></div>
+          <div style="position:absolute;top:44px;bottom:18px;right:8px;width:3px;border-radius:2px;background:rgba(242,233,220,.08)"><div style="position:absolute;top:32%;height:22%;left:0;right:0;border-radius:2px;background:#ee6c4d"></div></div>
+        </div>
+        <div style="position:absolute;top:14px;left:16px;display:flex;align-items:center;gap:10px">
+          <span style="font:600 10.5px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">GSAP.06 · SCROLLTRIGGER</span>
+          <span style="font:500 10.5px 'IBM Plex Mono';padding:3px 8px;border-radius:6px;background:rgba(238,108,77,.14);color:#f0876b">rotation.z</span>
+        </div>
+        <div style="position:absolute;top:12px;right:14px;display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12)">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#ee6c4d;color:#2a120a;font:700 10px 'IBM Plex Mono'">?</span>
+          <span style="font-size:12px;font-weight:600">Concept</span>
+        </div>
+        <div style="position:absolute;left:16px;bottom:14px;display:flex;gap:12px;padding:6px 11px;border-radius:8px;background:rgba(20,16,13,.75);border:1px solid rgba(242,233,220,.09);font:500 10px 'IBM Plex Mono'">
+          <span style="color:#f0876b">progress&nbsp;0.42</span><span style="color:#a2907c">60&nbsp;fps</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;height:52px;padding:0 14px;border-radius:12px;background:#26211c;border:1px solid rgba(242,233,220,.07)">
+        <span style="font:600 10px 'IBM Plex Mono';letter-spacing:.12em;color:#a2907c">SCROLL</span>
+        <div style="flex:1;position:relative;height:22px">
+          <div style="position:absolute;left:0;right:0;top:50%;height:6px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1);background-image:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 10%)"></div>
+          <div style="position:absolute;left:20%;right:20%;top:50%;height:6px;transform:translateY(-50%);background:rgba(238,108,77,.28)"></div>
+          <div style="position:absolute;left:20%;top:50%;width:11px;height:11px;background:#ee6c4d;transform:translate(-50%,-50%) rotate(45deg)"></div>
+          <div style="position:absolute;left:80%;top:50%;width:11px;height:11px;background:#ee6c4d;transform:translate(-50%,-50%) rotate(45deg)"></div>
+          <div style="position:absolute;left:20%;top:100%;transform:translateX(-50%);font:500 9px 'IBM Plex Mono';color:#f0876b;margin-top:-2px">start 20%</div>
+          <div style="position:absolute;left:80%;top:100%;transform:translateX(-50%);font:500 9px 'IBM Plex Mono';color:#f0876b;margin-top:-2px">end 80%</div>
+          <div style="position:absolute;left:45%;top:0;bottom:0;width:2px;background:#f4ebe2;border-radius:1px"></div>
+        </div>
+        <div style="font:500 11px 'IBM Plex Mono';color:#a2907c">45 %</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:10px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">DÉCLENCHEMENT</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;font-weight:600">scrub<span style="font-weight:400;color:#a2907c"> · lié au doigt</span></span>
+          <div style="width:32px;height:18px;border-radius:99px;background:#ee6c4d;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#2a120a"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;font-weight:600">pin<span style="font-weight:400;color:#a2907c"> · épingler l'objet</span></span>
+          <div style="width:32px;height:18px;border-radius:99px;background:#ee6c4d;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#2a120a"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11px;color:#a2907c">start</span><div style="padding:7px 10px;border-radius:9px;background:#1c1815;border:1px solid rgba(242,233,220,.12);font:600 12px 'IBM Plex Mono'">top 80%</div></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11px;color:#a2907c">end</span><div style="padding:7px 10px;border-radius:9px;background:#1c1815;border:1px solid rgba(242,233,220,.12);font:600 12px 'IBM Plex Mono'">top 20%</div></div>
+        </div>
+      </div>
+      <div style="background:#26211c;border:1px solid rgba(242,233,220,.07);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">ANIMATION LIÉE</div>
+        <div style="display:flex;gap:6px">
+          <div style="padding:6px 13px;border-radius:99px;background:#ee6c4d;color:#2a120a;font-size:12px;font-weight:600">Rotation</div>
+          <div style="padding:6px 13px;border-radius:99px;border:1px solid rgba(242,233,220,.12);font-size:12px;color:#cbb397">Position</div>
+          <div style="padding:6px 13px;border-radius:99px;border:1px solid rgba(242,233,220,.12);font-size:12px;color:#cbb397">Échelle</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Amplitude<span style="font-weight:400;color:#a2907c"> · degrés</span></span><span style="font:600 12.5px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:#1c1815;border:1px solid rgba(242,233,220,.12)">180</span></div>
+          <div style="position:relative;height:14px"><div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1)"></div><div style="position:absolute;left:0;top:50%;height:5px;width:50%;transform:translateY(-50%);border-radius:3px;background:#ee6c4d"></div><div style="position:absolute;left:50%;top:50%;width:13px;height:13px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div></div>
+        </div>
+      </div>
+      <div style="background:#14100d;border:1px solid rgba(242,233,220,.08);border-radius:12px;overflow:hidden;margin-top:auto">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(242,233,220,.07)">
+          <span style="font:600 11px 'IBM Plex Mono';color:#f0876b">‹/›</span>
+          <span style="flex:1"></span>
+          <span style="font:600 10px 'IBM Plex Mono';padding:4px 9px;border-radius:6px;background:rgba(238,108,77,.14);color:#f0876b">Copier</span>
+          <span style="color:#7d6e5c;font-size:10px">▴</span>
+        </div>
+        <div style="padding:10px 0;font:400 11px/1.7 'IBM Plex Mono'">
+          <div style="padding:0 14px;color:#d8c9b8">gsap.to(mesh.rotation, {</div>
+          <div style="padding:0 14px;color:#d8c9b8">&nbsp;&nbsp;z: Math.PI,</div>
+          <div style="padding:0 14px;background:rgba(238,108,77,.13);color:#f6e3cd">&nbsp;&nbsp;scrollTrigger: { scrub: <b style="color:#f0876b">true</b>,</div>
+          <div style="padding:0 14px;color:#d8c9b8">&nbsp;&nbsp;&nbsp;&nbsp;start: "top 80%", end: "top 20%" }</div>
+          <div style="padding:0 14px;color:#d8c9b8">})</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2e CONCEPT ============ -->
+<section class="fr" id="2e">
+<div class="fh"><a class="oid" href="#2e">2e</a><span class="ft">Panneau Concept ouvert + états du bouton</span></div>
+<p class="note">Largeur fixe 400 px, ancré sous le bouton, la scène continue de jouer derrière (assombrie à 45 %, transport actif). Fermeture : ×, clic hors panneau, Échap. Sur mobile : feuille plein écran. Le point ambre disparaît quand le panneau a été ouvert une fois sur la leçon.</p>
+<div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc;padding:14px">
+  <div style="position:relative;height:560px;border-radius:14px;overflow:hidden;border:1px solid rgba(242,233,220,.07);background:radial-gradient(120% 90% at 50% 28%,#251d16 0%,#161210 72%)">
+    <div style="position:absolute;inset:0;background:rgba(12,9,7,.45)"></div>
+    <div style="position:absolute;left:-15%;right:-15%;bottom:-30px;height:52%;transform:perspective(700px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(240,157,90,.1) 0 1px,transparent 1px 58px),repeating-linear-gradient(0deg,rgba(240,157,90,.08) 0 1px,transparent 1px 44px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+    <div style="position:absolute;left:38%;top:42%;width:112px;height:130px;transform:translate(-50%,-58%);opacity:.6">
+      <div style="position:absolute;inset:0;background:#f8c98f;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+      <div style="position:absolute;inset:0;background:#e0854a;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+      <div style="position:absolute;inset:0;background:#a9542b;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+    </div>
+    <div style="position:absolute;top:14px;left:16px;font:600 10.5px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c;opacity:.6">NATIF.02 · ANATOMIE D'UN TWEEN</div>
+    <div style="position:absolute;top:12px;right:14px;display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:99px;background:rgba(240,157,90,.16);border:1px solid #f09d5a">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#f09d5a;color:#221507;font:700 10px 'IBM Plex Mono'">?</span>
+      <span style="font-size:12px;font-weight:600;color:#f0b678">Concept</span>
+    </div>
+    <div style="position:absolute;top:58px;right:14px;width:400px;background:#26211c;border:1px solid rgba(242,233,220,.14);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 18px 50px rgba(0,0,0,.55)">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#f0b678">CONCEPT</span>
+        <span style="width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(242,233,220,.07);color:#a2907c;font-size:13px">×</span>
+      </div>
+      <div style="font-size:16px;font-weight:600">Un tween est un trajet</div>
+      <div style="font-size:12.5px;line-height:1.6;color:#d8c9b8">GSAP change une propriété de l'objet — une position, une rotation, une échelle — pendant une durée donnée. Trois choses suffisent à le décrire : d'où l'on part, où l'on va, et la forme du trajet entre les deux. La méthode choisit lesquelles de ces trois choses sont écrites dans le code.</div>
+      <div style="font-size:12.5px;line-height:1.6;color:#d8c9b8">Les fantômes déposés sur la scène montrent la position de l'objet tous les dixièmes de seconde : leur espacement, c'est la vitesse. Regarde-les se resserrer à l'arrivée quand la courbe décélère.</div>
+      <div style="font-size:12px;line-height:1.55;background:rgba(240,157,90,.1);border:1px solid rgba(240,157,90,.3);border-radius:10px;padding:10px 12px">Ici, <b style="font-family:'IBM Plex Mono';font-weight:600">from</b> ne fixe que le départ : l'objet surgit de x = 10 et revient à sa place de repos.</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:2px">
+        <span style="font-size:11px;color:#a2907c">Échap pour fermer</span>
+        <span style="font-size:11.5px;font-weight:600;color:#f0b678">Marquer comme lu</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:16px;bottom:14px;display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;background:rgba(20,16,13,.8);border:1px solid rgba(242,233,220,.09)">
+      <span style="width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#f09d5a;color:#221507;font-size:10px">▶</span>
+      <span style="font:500 10px 'IBM Plex Mono';color:#a2907c">la démo continue de jouer</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:26px;align-items:center;padding:16px 4px 2px">
+    <span style="font:600 10px 'IBM Plex Mono';letter-spacing:.14em;color:#a2907c">ÉTATS DU BOUTON</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="position:relative;display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12)"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:#f09d5a;color:#221507;font:700 9px 'IBM Plex Mono'">?</span><span style="font-size:11.5px;font-weight:600">Concept</span><span style="position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:#f09d5a;border:2px solid #1c1815"></span></div>
+      <span style="font-size:11px;color:#a2907c">non lu — point ambre</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:rgba(240,157,90,.16);border:1px solid #f09d5a"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:#f09d5a;color:#221507;font:700 9px 'IBM Plex Mono'">?</span><span style="font-size:11.5px;font-weight:600;color:#f0b678">Concept</span></div>
+      <span style="font-size:11px;color:#a2907c">ouvert</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12);opacity:.75"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:rgba(240,157,90,.4);color:#221507;font:700 9px 'IBM Plex Mono'">?</span><span style="font-size:11.5px;font-weight:600;color:#cbb397">Concept</span></div>
+      <span style="font-size:11px;color:#a2907c">lu</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2f NAVIGATION ============ -->
+<section class="fr" id="2f">
+<div class="fh"><a class="oid" href="#2f">2f</a><span class="ft">Navigation 2 niveaux — trois familles différenciées</span></div>
+<p class="note">Rangée 1 : familles (point de teinte + soulignement), interrupteur <span style="font-family:'IBM Plex Mono';font-size:11px">prefers-reduced-motion</span> global et compteur sobre. Rangée 2 : leçons de la famille active, pastille dans la teinte de famille. La teinte s'applique aussi aux accents de l'écran (sélections, curseurs, code).</p>
+<div style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <span style="font:500 10px 'IBM Plex Mono';color:rgba(43,33,24,.5)">SOCLE NATIF — ambre</span>
+    <div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:50px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:16px;height:16px;background:#f09d5a;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><div style="font-weight:700;font-size:15px">Anima Lab</div></div>
+        <div style="display:flex;gap:22px">
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:2px solid #f09d5a"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a"></span><span style="font-size:12.5px;font-weight:600">Socle natif</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#ee6c4d;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">GSAP</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#d96a8f;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">Shaders</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="display:flex;align-items:center;gap:7px"><div style="width:30px;height:17px;border-radius:99px;background:rgba(242,233,220,.12);position:relative"><div style="position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#a2907c"></div></div><span style="font:500 10px 'IBM Plex Mono';color:#a2907c">motion réduit</span></div>
+          <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">2 / 25</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;height:40px;padding:0 18px">
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">01</span><span style="font-size:12px;color:#a2907c">Pipeline</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:rgba(240,157,90,.12);border:1px solid rgba(240,157,90,.35)"><span style="font:600 9.5px 'IBM Plex Mono';color:#f0b678">02</span><span style="font-size:12px;font-weight:600">Anatomie d'un tween</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">03</span><span style="font-size:12px;color:#a2907c">Easing</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">04</span><span style="font-size:12px;color:#a2907c">Transition vs keyframes</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">05</span><span style="font-size:12px;color:#a2907c">Transform</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">06</span><span style="font-size:12px;color:#a2907c">WAAPI</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">07</span><span style="font-size:12px;color:#a2907c">Non-interpolables</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">08</span><span style="font-size:12px;color:#a2907c">Scroll</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">09</span><span style="font-size:12px;color:#a2907c">FLIP</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">10</span><span style="font-size:12px;color:#a2907c">Accessibilité</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <span style="font:500 10px 'IBM Plex Mono';color:rgba(43,33,24,.5)">GSAP — coral · interrupteur motion réduit ACTIF (les démos passent en scrub seul)</span>
+    <div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:50px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:16px;height:16px;background:#ee6c4d;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><div style="font-weight:700;font-size:15px">Anima Lab</div></div>
+        <div style="display:flex;gap:22px">
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">Socle natif</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:2px solid #ee6c4d"><span style="width:7px;height:7px;border-radius:50%;background:#ee6c4d"></span><span style="font-size:12.5px;font-weight:600">GSAP</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#d96a8f;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">Shaders</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="display:flex;align-items:center;gap:7px"><div style="width:30px;height:17px;border-radius:99px;background:#ee6c4d;position:relative"><div style="position:absolute;right:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#2a120a"></div></div><span style="font:500 10px 'IBM Plex Mono';color:#f0876b">motion réduit</span></div>
+          <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">16 / 25</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;height:40px;padding:0 18px">
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">01</span><span style="font-size:12px;color:#a2907c">Tween</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">02</span><span style="font-size:12px;color:#a2907c">Timeline</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">03</span><span style="font-size:12px;color:#a2907c">Stagger</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">04</span><span style="font-size:12px;color:#a2907c">Eases</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">05</span><span style="font-size:12px;color:#a2907c">Contrôle temporel</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:rgba(238,108,77,.12);border:1px solid rgba(238,108,77,.4)"><span style="font:600 9.5px 'IBM Plex Mono';color:#f0876b">06</span><span style="font-size:12px;font-weight:600">ScrollTrigger</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">07</span><span style="font-size:12px;color:#a2907c">Hors DOM</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">08</span><span style="font-size:12px;color:#a2907c">SplitText</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">09</span><span style="font-size:12px;color:#a2907c">SVG</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">10</span><span style="font-size:12px;color:#a2907c">Flip</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <span style="font:500 10px 'IBM Plex Mono';color:rgba(43,33,24,.5)">SHADERS — rose · fonds de scène avec grain léger</span>
+    <div class="frame" style="width:1180px;background:#1c1815;color:#f2e9dc">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:50px;padding:0 18px;border-bottom:1px solid rgba(242,233,220,.07)">
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:16px;height:16px;background:#d96a8f;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div><div style="font-weight:700;font-size:15px">Anima Lab</div></div>
+        <div style="display:flex;gap:22px">
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#f09d5a;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">Socle natif</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px"><span style="width:7px;height:7px;border-radius:50%;background:#ee6c4d;opacity:.45"></span><span style="font-size:12.5px;color:#a2907c">GSAP</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:2px solid #d96a8f"><span style="width:7px;height:7px;border-radius:50%;background:#d96a8f"></span><span style="font-size:12.5px;font-weight:600">Shaders</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="display:flex;align-items:center;gap:7px"><div style="width:30px;height:17px;border-radius:99px;background:rgba(242,233,220,.12);position:relative"><div style="position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#a2907c"></div></div><span style="font:500 10px 'IBM Plex Mono';color:#a2907c">motion réduit</span></div>
+          <span style="font:500 11px 'IBM Plex Mono';color:#a2907c">21 / 25</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;height:40px;padding:0 18px">
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;background:rgba(217,106,143,.12);border:1px solid rgba(217,106,143,.4)"><span style="font:600 9.5px 'IBM Plex Mono';color:#e694ae">01</span><span style="font-size:12px;font-weight:600">Modèle d'exécution</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">02</span><span style="font-size:12px;color:#a2907c">Temps &amp; progression</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">03</span><span style="font-size:12px;color:#a2907c">mix · step · smoothstep</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">04</span><span style="font-size:12px;color:#a2907c">Bruit</span></div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px"><span style="font:600 9.5px 'IBM Plex Mono';color:#a2907c">05</span><span style="font-size:12px;color:#a2907c">Déplacement de géométrie</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2g MOBILE ============ -->
+<section class="fr" id="2g">
+<div class="fh"><a class="oid" href="#2g">2g</a><span class="ft">Mobile — écran de référence</span></div>
+<p class="note">Famille + leçon condensées en deux pilules (menus). Fantômes et mesures conservés. Bottom sheet à onglets ; le code reste une barre repliée au-dessus du bord bas — dépliée, elle recouvre la sheet, jamais la scène. Concept : feuille plein écran.</p>
+<div style="display:flex;gap:22px;align-items:flex-start">
+<div class="frame" style="width:390px;background:#1c1815;color:#f2e9dc;border-radius:30px;height:820px;display:flex;flex-direction:column;overflow:hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 4px;font:600 12px 'IBM Plex Mono';color:#a2907c"><span>9:41</span><span>●●●</span></div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 14px 10px">
+    <div style="width:13px;height:13px;background:#f09d5a;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></div>
+    <div style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;border:1px solid rgba(242,233,220,.14)"><span style="width:6px;height:6px;border-radius:50%;background:#f09d5a"></span><span style="font-size:11.5px;font-weight:600">Socle natif</span><span style="color:#a2907c;font-size:9px">▾</span></div>
+    <div style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:rgba(240,157,90,.12);border:1px solid rgba(240,157,90,.35)"><span style="font:600 9.5px 'IBM Plex Mono';color:#f0b678">02</span><span style="font-size:11.5px;font-weight:600">Anatomie d'un tween</span><span style="color:#a2907c;font-size:9px">▾</span></div>
+    <span style="margin-left:auto;font:500 10px 'IBM Plex Mono';color:#a2907c">2/25</span>
+  </div>
+  <div style="position:relative;height:300px;margin:0 12px;border-radius:16px;overflow:hidden;border:1px solid rgba(242,233,220,.07);background:radial-gradient(130% 100% at 50% 25%,#251d16 0%,#161210 75%)">
+    <div style="position:absolute;left:-20%;right:-20%;bottom:-20px;height:55%;transform:perspective(500px) rotateX(58deg);transform-origin:50% 0;background:repeating-linear-gradient(90deg,rgba(240,157,90,.16) 0 1px,transparent 1px 44px),repeating-linear-gradient(0deg,rgba(240,157,90,.12) 0 1px,transparent 1px 34px);-webkit-mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%);mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.9) 45%)"></div>
+    <div style="position:absolute;left:12px;right:12px;bottom:10px;height:6px;background:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 18px)"></div>
+    <div style="position:absolute;left:16%;top:40%;width:66px;height:76px;opacity:.08"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+    <div style="position:absolute;left:30%;top:40%;width:66px;height:76px;opacity:.13"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+    <div style="position:absolute;left:39%;top:40%;width:66px;height:76px;opacity:.2"><div style="position:absolute;inset:0;background:#f09d5a;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)"></div></div>
+    <div style="position:absolute;left:46%;top:45%;width:74px;height:86px;transform:translateY(-52%)">
+      <div style="position:absolute;inset:0;background:#f8c98f;clip-path:polygon(50% 0%,100% 25%,50% 50%,0% 25%)"></div>
+      <div style="position:absolute;inset:0;background:#e0854a;clip-path:polygon(0% 25%,50% 50%,50% 100%,0% 75%)"></div>
+      <div style="position:absolute;inset:0;background:#a9542b;clip-path:polygon(50% 50%,100% 25%,100% 75%,50% 100%)"></div>
+    </div>
+    <div style="position:absolute;top:10px;left:12px;font:500 9.5px 'IBM Plex Mono';padding:3px 7px;border-radius:6px;background:rgba(240,157,90,.14);color:#f0b678">position.x</div>
+    <div style="position:absolute;top:8px;right:10px;display:flex;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.12);font:600 9px 'IBM Plex Mono'"><span style="color:#f0b678">WebGL</span><span style="color:#7d6e5c">|</span><span style="color:#7d6e5c">CSS</span></div>
+      <div style="position:relative;width:26px;height:26px;border-radius:50%;background:rgba(38,33,28,.85);border:1px solid rgba(242,233,220,.14);display:flex;align-items:center;justify-content:center;font:700 11px 'IBM Plex Mono';color:#f0b678">?<span style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#f09d5a;border:2px solid #161210"></span></div>
+    </div>
+    <div style="position:absolute;right:10px;bottom:10px;display:flex;gap:9px;padding:4px 8px;border-radius:7px;background:rgba(20,16,13,.75);font:500 9px 'IBM Plex Mono'"><span style="color:#f0b678">x 3.42</span><span style="color:#a2907c">60 fps</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;padding:10px 16px">
+    <div style="width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#f09d5a;color:#221507;font-size:12px">▶</div>
+    <div style="flex:1;position:relative;height:14px">
+      <div style="position:absolute;left:0;right:0;top:50%;height:5px;transform:translateY(-50%);border-radius:3px;background:rgba(242,233,220,.1);background-image:repeating-linear-gradient(90deg,rgba(242,233,220,.14) 0 1px,transparent 1px 10%)"></div>
+      <div style="position:absolute;left:0;top:50%;height:5px;width:38%;transform:translateY(-50%);border-radius:3px;background:linear-gradient(90deg,#b9622f,#f09d5a)"></div>
+      <div style="position:absolute;left:38%;top:50%;width:13px;height:13px;border-radius:50%;background:#f6e3cd;transform:translate(-50%,-50%)"></div>
+    </div>
+    <span style="font:500 10px 'IBM Plex Mono';color:#a2907c">0.76 s</span>
+    <div style="padding:4px 8px;border-radius:7px;background:rgba(242,233,220,.06);font:600 10px 'IBM Plex Mono'">1×</div>
+  </div>
+  <div style="flex:1;background:#26211c;border-radius:22px 22px 0 0;border-top:1px solid rgba(242,233,220,.09);padding:10px 16px 12px;display:flex;flex-direction:column;gap:12px">
+    <div style="width:38px;height:4px;border-radius:2px;background:rgba(242,233,220,.18);margin:0 auto"></div>
+    <div style="display:flex;gap:4px;padding:4px;border-radius:11px;background:#1c1815">
+      <div style="flex:1;text-align:center;padding:7px 0;border-radius:8px;background:#f09d5a;color:#221507;font-size:12px;font-weight:600">Méthode</div>
+      <div style="flex:1;text-align:center;padding:7px 0;border-radius:8px;color:#a2907c;font-size:12px;font-weight:500">Valeurs</div>
+      <div style="flex:1;text-align:center;padding:7px 0;border-radius:8px;color:#a2907c;font-size:12px;font-weight:500">Courbe</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="border:1px solid rgba(242,233,220,.1);border-radius:11px;padding:10px 12px"><div style="font:600 13px 'IBM Plex Mono'">to</div><div style="font-size:11px;color:#a2907c">va vers</div></div>
+      <div style="border:1px solid #f09d5a;background:rgba(240,157,90,.1);border-radius:11px;padding:10px 12px"><div style="font:600 13px 'IBM Plex Mono';color:#f0b678">from</div><div style="font-size:11px;color:#cbb397">arrive de</div></div>
+      <div style="border:1px solid rgba(242,233,220,.1);border-radius:11px;padding:10px 12px"><div style="font:600 13px 'IBM Plex Mono'">fromTo</div><div style="font-size:11px;color:#a2907c">de … à …</div></div>
+      <div style="border:1px solid rgba(242,233,220,.1);border-radius:11px;padding:10px 12px"><div style="font:600 13px 'IBM Plex Mono'">set</div><div style="font-size:11px;color:#a2907c">sans trajet</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 2px 0">
+      <span style="font-size:12px;font-weight:600">Fantômes<span style="font-weight:400;color:#a2907c"> · trace</span></span>
+      <div style="width:32px;height:18px;border-radius:99px;background:#f09d5a;position:relative"><div style="position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#221507"></div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:#14100d;border:1px solid rgba(242,233,220,.08);margin-top:auto">
+      <span style="font:600 10.5px 'IBM Plex Mono';color:#f0b678">‹/›</span>
+      <span style="flex:1;font:400 10px 'IBM Plex Mono';color:#a2907c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">gsap.from(mesh.position, …)</span>
+      <span style="color:#7d6e5c;font-size:10px">▴</span>
+    </div>
+  </div>
+</div>
+<div style="max-width:320px;display:flex;flex-direction:column;gap:10px;font:400 12px/1.55 'Instrument Sans';color:rgba(43,33,24,.65)">
+  <div><b>Comparaison sur mobile</b> : moitiés superposées (A dessus, B dessous) avec bascule A/B au-dessus des indicateurs ; jamais côte à côte.</div>
+  <div><b>Leçon scroll sur mobile</b> : la zone défilante passe en plein écran (bouton « ouvrir la démo »), la page ne défile pas en dessous.</div>
+  <div><b>Code déplié</b> : recouvre la sheet en glissant du bas, la scène reste visible ; la ligne active reste surlignée pendant le réglage.</div>
+</div>
+</div>
+</section>
+</x-dc>
+</body>
+</html>
