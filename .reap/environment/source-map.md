@@ -4,9 +4,15 @@
 > Chargé à la demande, contrairement à `environment/summary.md` qui charge à chaque
 > session. La structure vit ici ; le résumé n'en garde qu'un pointeur.
 >
-> **Aucun de ces modules n'existe encore.** Ce fichier enregistre la disposition arrêtée
-> en spec §12, pour que le lot 1 la suive au lieu de l'improviser. Mettre à jour au fil
-> du code : `reap index` dit qui appelle quoi, ce fichier dit pourquoi.
+> **Les dossiers existent, les modules non.** Les neuf dossiers de la structure §12 sont
+> créés et leurs alias configurés dans `vite.config.ts` et `tsconfig.json` — vérifiés par
+> `src/test/aliases.test.ts`, qui échoue si les deux divergent. Aucun module décrit
+> ci-dessous n'est encore écrit : le lot 1 les remplit.
+>
+> Alias disponibles : `@` (racine `src/`), `@core`, `@shell`, `@scenes`, `@transport`,
+> `@controls`, `@code`, `@i18n`, `@lessons`.
+>
+> Mettre à jour au fil du code : `reap index` dit qui appelle quoi, ce fichier dit pourquoi.
 
 ## Directory Structure
 

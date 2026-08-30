@@ -5,17 +5,26 @@ Résumé chargé à chaque session. Le détail de la structure des modules vit d
 
 ## État actuel du dépôt
 
-**Rien n'est encore échafaudé.** Le dépôt contient la spécification, les maquettes et la
-structure REAP. Aucun `package.json`, aucun `src/`, aucune dépendance installée. Le
-premier lot crée tout cela.
+La chaîne d'outils est en place ; **aucun code produit n'est encore écrit**. Les dossiers
+de la structure §12 existent, vides, avec leurs alias configurés et vérifiés par test.
 
 ```
 .
-├── CLAUDE.md                       instructions projet (section REAP gérée par reap)
-├── .reap/                          génome, environnement, vision, mémoire
-└── design/
-    ├── spec-technique-anima-lab.md spécification fonctionnelle et technique
-    └── handoff_anima_lab/          maquettes (.dc.html) + README de remise
+├── index.html
+├── package.json            sept scripts, tous vérifiés
+├── tsconfig.json           strict + noUncheckedIndexedAccess, noImplicitOverride,
+│                           exactOptionalPropertyTypes, verbatimModuleSyntax
+├── vite.config.ts          plugin React, 9 alias, et la config Vitest (jsdom)
+├── biome.json              2 espaces, guillemets simples, points-virgules au besoin, largeur 100
+├── playwright.config.ts    testDir tests/e2e, webServer sur vite preview :4173
+├── src/
+│   ├── main.tsx App.tsx App.test.tsx vite-env.d.ts
+│   ├── test/               setup.ts, aliases.test.ts
+│   └── shell/ scenes/ transport/drivers/ controls/ code/ i18n/ lessons/ core/
+│                           vides (.gitkeep) — remplis au lot 1
+├── tests/e2e/smoke.spec.ts
+├── design/                 spécification et maquettes
+└── .reap/
 ```
 
 `design/spec-technique-anima-lab.md` est la source de vérité comportementale : 14 sections
@@ -30,25 +39,40 @@ déploiement, l'accessibilité, le plan de livraison en 8 lots, et la définitio
 | Plateforme | macOS (darwin), shell zsh |
 | Node | v22.23.2 |
 | npm | 10.9.8 |
-| Doppler | **non installé** — à installer avant tout besoin de secret |
+| Doppler | **non installé** — nécessaire seulement au déploiement (ghcr.io, Dokploy) |
 
-Le projet est un front statique sans serveur applicatif : au MVP, aucun secret n'est requis
-au développement. Doppler devient nécessaire au moment du déploiement (registre ghcr.io,
-configuration Dokploy), pas avant.
+Versions installées :
 
-## Commandes (à créer au lot 1)
+| Paquet | Version |
+|---|---|
+| `vite` | 8.2.2 |
+| `react` / `react-dom` | 19.2.8 |
+| `typescript` | 7.0.2 |
+| `@vitejs/plugin-react` | 6.1.1 |
+| `@biomejs/biome` | 2.5.11 |
+| `vitest` | 4.1.11 |
+| `@testing-library/react` | 16.3.3 |
+| `@playwright/test` | 1.62.1 (chromium seul installé) |
+| `jsdom` | 30.0.1 |
 
-Aucune n'existe encore. Le lot 1 doit établir, au minimum :
+**Piège à connaître : TypeScript 7 a supprimé `baseUrl`.** Les mappings de `paths` doivent
+être relatifs et commencer par `./`, sinon `TS5102` et `TS5090`. C'est le compilateur natif
+écrit en Go ; il fonctionne avec Vite, Biome, Vitest et Playwright.
+
+## Commandes
 
 | Commande | Rôle |
 |---|---|
-| `npm run dev` | serveur de développement Vite |
-| `npm run build` | build de production dans `dist/` |
-| `npm run preview` | prévisualisation du build |
-| `npm run check` | Biome — formatage et lint |
-| `npm run test` | Vitest |
-| `npm run test:e2e` | Playwright |
-| `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
+| `npm run dev` | serveur de développement Vite, `:5173` |
+| `npm run build` | `tsc --noEmit && vite build` vers `dist/` |
+| `npm run preview` | sert le build sur `:4173` |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run check` | Biome — formatage et lint (`check:fix` pour écrire) |
+| `npm run test` | Vitest (`test:watch` en mode veille) |
+| `npm run test:e2e` | Playwright contre le build de prévisualisation |
+
+Les tests unitaires vivent à côté du code (`src/**/*.test.{ts,tsx}`), le bout en bout dans
+`tests/e2e/`. Playwright construit et sert lui-même l'application via son `webServer`.
 
 ## Dépôt et branches
 

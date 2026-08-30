@@ -195,7 +195,7 @@ Effet attendu quand il est actif : **les démos ne disparaissent pas**, elles pa
 
 ## 6. Performance
 
-- Chargement initial visé sous 200 ko de JS hors Three.js.
+- Chargement initial visé sous 200 ko de JS **gzip**, hors Three.js — mesuré sur le chunk de la route initiale, hors chunks chargés par famille.
 - Three.js, GSAP et les plugins chargés à la demande, par famille de leçons (`React.lazy` + découpage Vite par route).
 - Aucune leçon ne descend sous 55 images par seconde sur un portable milieu de gamme — **sauf la démonstration du coût de rendu, où la chute de performance est le contenu** ; ne l'optimise pas.
 - Textures des leçons shaders : compressées, 1024 px maximum.

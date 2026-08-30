@@ -206,7 +206,12 @@ vrais, sans exception :
 
 **Performance** (spec §6) :
 
-- Chargement initial sous **200 ko de JS hors Three.js**.
+- Chargement initial sous **200 ko de JS gzip, hors Three.js**. L'unité est le gzip :
+  c'est ce que l'utilisateur télécharge, c'est ce que nginx sert (compression activée,
+  §8), et lu en octets bruts le budget serait consommé à 95 % par React seul.
+  Mesure : la sortie de `vite build` pour le chunk de la route initiale, hors chunks
+  chargés paresseusement par famille et hors Three.js. Le budget porte sur la route
+  initiale, pas sur la somme des chunks.
 - Three.js, GSAP et les plugins chargés à la demande, par famille de leçons.
 - Aucune leçon sous **55 images par seconde** sur un portable milieu de gamme — sauf la
   démonstration du coût de rendu, où la chute de performance *est* le contenu : ne pas

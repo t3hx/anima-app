@@ -3,3 +3,25 @@
 
 # macOS
 .DS_Store
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Secrets — everything goes through Doppler, never a committed file
+.env
+.env.*
+!.env.example
+
+# Editor / tooling caches
+*.tsbuildinfo
+.vite/

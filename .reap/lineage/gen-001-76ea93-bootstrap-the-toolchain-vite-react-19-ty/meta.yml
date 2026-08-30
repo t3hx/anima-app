@@ -1,0 +1,26 @@
+id: gen-001-76ea93
+type: embryo
+goal: "Bootstrap the toolchain: Vite + React 19 + TypeScript strict, Biome,
+  Vitest with Testing Library, and Playwright. No product code — a repository
+  that can build, typecheck, lint, unit-test and e2e-test. Covers Linear T3H-110
+  (EPIC#1) tasks T3H-133 to T3H-138."
+parents: []
+timeline:
+  - stage: learning
+    at: 2026-08-30T20:59:26.068Z
+  - stage: planning
+    at: 2026-08-30T21:00:53.728Z
+  - stage: implementation
+    at: 2026-08-30T21:04:27.245Z
+  - stage: validation
+    at: 2026-08-30T21:10:08.134Z
+  - stage: completion
+    at: 2026-08-30T21:11:06.294Z
+status: completed
+fitnessFeedback:
+  text: "Human validated the generation and asked for it to be committed. Positive
+    feedback, no corrections requested. Two matters deliberately left open by
+    the human's own framing: the 200 kB budget unit (backlog, awaiting decision)
+    and whether to push — nothing is pushed, remote t3hx/anima-app is still
+    empty. Committed as 6f183dc on chore/bootstrap-toolchain."
+  evaluatedAt: 2026-08-30T21:15:38.948Z
