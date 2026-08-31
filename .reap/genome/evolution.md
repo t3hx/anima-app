@@ -94,8 +94,31 @@ If you write a check and immediately see it pass, you do not know whether it cat
 
 - Run it against the **broken** state first and confirm the failure. That failure is the evidence the check is real.
 - Do the same per assertion — break a known-good value, confirm the failure, restore it (negative test).
+- **A mutant must compile, and must break the assertion that carries the meaning.** Two of lot 1's mutation proofs proved nothing: one failed to compile — it tested the build chain — and the other tripped a neighbouring assertion that fired before the one that mattered. Check *which* assertion goes red, not merely that something did.
 - **Record what the check cannot see, alongside its results.** Passing means "no problem within the check's scope". Without a stated limit, the next person trusts it further than it goes.
 - **Ask what would still be green if the feature were simply removed.** A suite can assert around a feature — its pure helpers, the order of strings in a file — without anything observing that the feature happens. And if every row of a coverage table shares one premise, adding rows cannot help: the shared premise is the dimension nobody varied.
+
+### A test must observe what the user observes
+
+Lot 1 shipped eight defects that a human found by using the application, while the suite
+stayed green. Every one had the same shape: the test watched an **intermediate** — an
+internal counter, a button's label, an initial state, a correctly-oriented camera — instead
+of the result. Once, 179 unit tests and 23 browser scenarios were green on an **empty
+screen**.
+
+Green does not mean "it works". It means "nothing I observe moved". Observing the wrong
+thing is the failure mode, and it is invisible from inside the suite.
+
+Three corollaries, each paid for by a shipped defect:
+
+- **On a visual product, no counter replaces reading the pixels** — and it takes two
+  measurements: that the subject is *present*, and that it is *framed*. Counting the
+  subject's pixels does not catch a lost camera; the object simply sits against the lens.
+- **A screenshot does not prove a colour; a computed style does.** A claimed fix was
+  reported as done from an image where the colour was imagined. The rule had never been
+  written.
+- **A derived value computed in two places will eventually lie.** Three of lot 1's defects
+  have this single cause. Give the value one owner and inject it.
 
 ### Record what kind of evidence you have — and "ran it" must name the command
 

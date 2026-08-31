@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Driver harness</title>
+  </head>
+  <body>
+    <!--
+      Banc d'essai du driver WAAPI. Il n'entre PAS dans le build de production : Vite ne
+      l'ajoute comme entrée que si `E2E_HARNESS` est posé, ce que fait le `webServer` de
+      Playwright. jsdom n'implémentant aucune WAAPI, c'est le seul endroit où le driver
+      peut être exercé pour de vrai.
+    -->
+    <script type="module" src="./harness.ts"></script>
+  </body>
+</html>

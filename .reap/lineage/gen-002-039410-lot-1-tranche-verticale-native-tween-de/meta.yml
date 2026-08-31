@@ -1,0 +1,91 @@
+id: gen-002-039410
+type: embryo
+goal: "Lot 1 — tranche verticale native-tween de bout en bout : contrats
+  TypeScript (Lesson, Param, CodeTemplate, CodeLine), lessonRegistry, store de
+  paramètres Zustand avec abonnement transitoire, LessonShell piloté par
+  descripteur, canvas react-three-fiber persistant, scène webgl, TimeDriver et
+  driver GSAP, TransportBar timeline, contrôles slider et choice génériques,
+  panneau de code avec surbrillance, ossature i18n et routes préfixées par
+  locale, et la leçon native-tween complète avec son concept rédigé"
+parents:
+  - gen-001-76ea93
+timeline:
+  - stage: learning
+    at: 2026-08-30T21:30:39.724Z
+  - stage: planning
+    at: 2026-08-30T21:33:20.194Z
+  - stage: implementation
+    at: 2026-08-30T21:43:01.034Z
+  - stage: validation
+    at: 2026-08-30T22:35:30.760Z
+  - stage: completion
+    at: 2026-08-30T22:36:39.239Z
+  - stage: validation
+    at: 2026-08-30T23:00:57.717Z
+    from: completion
+    reason: "Human validation found the lesson renders nothing on screen. The whole
+      suite was green: no check observed that anything is actually painted."
+  - stage: implementation
+    at: 2026-08-30T23:01:02.220Z
+    from: validation
+    reason: "The defect is in the implementation, not only in the checks: no camera,
+      wrong stacking, broken height chain."
+  - stage: validation
+    at: 2026-08-30T23:01:51.010Z
+  - stage: completion
+    at: 2026-08-30T23:02:46.229Z
+  - stage: validation
+    at: 2026-08-30T23:41:22.062Z
+    from: completion
+    reason: "Second human validation: keyboard and reduced-motion toggle did not
+      work, methods lacked a destination, scene decorations missing."
+  - stage: implementation
+    at: 2026-08-30T23:41:22.164Z
+    from: validation
+    reason: Second human validation round.
+  - stage: validation
+    at: 2026-08-30T23:41:48.793Z
+  - stage: completion
+    at: 2026-08-30T23:41:49.032Z
+  - stage: validation
+    at: 2026-08-30T23:59:21.167Z
+    from: completion
+    reason: "Third human review: orthographic camera contradicted the mockups."
+  - stage: implementation
+    at: 2026-08-30T23:59:21.273Z
+    from: validation
+    reason: Third human review.
+  - stage: validation
+    at: 2026-08-30T23:59:21.488Z
+  - stage: implementation
+    at: 2026-08-31T00:32:21.028Z
+    from: validation
+    reason: Fourth human review.
+  - stage: planning
+    at: 2026-08-31T00:32:21.138Z
+    from: implementation
+    reason: Fourth human review.
+  - stage: implementation
+    at: 2026-08-31T00:32:25.696Z
+  - stage: validation
+    at: 2026-08-31T00:32:25.920Z
+  - stage: completion
+    at: 2026-08-31T02:20:29.688Z
+status: completed
+fitnessFeedback:
+  text: "Human validation over eight rounds of hands-on testing. The human found
+    every substantive defect: an empty scene while 179 unit tests and 23 e2e
+    scenarios were green; keyboard shortcuts and the reduced-motion switch inert
+    although both were covered by passing tests; an orthographic camera
+    contradicting the mockups; a scene that flattened when a control block was
+    hidden; a claimed CSS fix that had never been written and was reported as
+    done from a screenshot — the human called this out as a lie, correctly;
+    scrollbars in the middle of the interface; slider thumbs crossed by their
+    own track; code overflowing its drawer. The human also proposed the two
+    designs that resolved the layout for good: independent column heights, and
+    different lateral margins for chrome and body. Repeated frustration was
+    expressed about the number of round trips, and it was justified: every
+    defect came from tests observing an intermediate value rather than the
+    result the user sees. Final state accepted; the human asked for the
+    generation to be completed, CLAUDE.md written, and a PR opened."
+  evaluatedAt: 2026-08-31T02:24:25.914Z

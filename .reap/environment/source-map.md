@@ -4,13 +4,12 @@
 > Chargé à la demande, contrairement à `environment/summary.md` qui charge à chaque
 > session. La structure vit ici ; le résumé n'en garde qu'un pointeur.
 >
-> **Les dossiers existent, les modules non.** Les neuf dossiers de la structure §12 sont
-> créés et leurs alias configurés dans `vite.config.ts` et `tsconfig.json` — vérifiés par
-> `src/test/aliases.test.ts`, qui échoue si les deux divergent. Aucun module décrit
-> ci-dessous n'est encore écrit : le lot 1 les remplit.
+> **Le lot 1 est écrit.** Les modules ci-dessous existent ; ceux marqués « lot N » sont
+> encore à venir. Les alias sont vérifiés par `src/test/aliases.test.ts`, qui échoue si
+> `vite.config.ts` et `tsconfig.json` divergent.
 >
-> Alias disponibles : `@` (racine `src/`), `@core`, `@shell`, `@scenes`, `@transport`,
-> `@controls`, `@code`, `@i18n`, `@lessons`.
+> Alias : `@` (racine `src/`), `@core`, `@shell`, `@scenes`, `@transport`, `@controls`,
+> `@code`, `@i18n`, `@lessons`.
 >
 > Mettre à jour au fil du code : `reap index` dit qui appelle quoi, ce fichier dit pourquoi.
 
@@ -37,12 +36,15 @@ définit de type de leçon ni ne stocke de valeur de paramètre.
 
 | Fichier | Rôle | Possède |
 |---|---|---|
-| `types.ts` | le contrat : `Lesson`, `Param`, `CodeTemplate`, `CodeLine`, `SceneKind`, `TransportKind`, `Family`, `I18nKey` | la forme de toute leçon. Écrit avant tout composant |
+| `types.ts` | le contrat : `Lesson`, `Param`, `CodeTemplate`, `CodeLine`, `CubeAnimation`, `LessonTiming`, `VisibilityRule` | la forme de toute leçon. **Cinq champs absents de la spec §3** — `ParamValues`, `slug`, `animate`, `timing`, `visibleWhen` — chacun imposé par un cas réel |
 | `paramStore.ts` | store Zustand des paramètres de la leçon en cours | **l'unique** source de vérité des valeurs. Expose lecture avec re-rendu (contrôles) et abonnement transitoire sans re-rendu (moteur d'animation) |
-| `lessonRegistry.ts` | découverte et chargement des descripteurs, par famille | l'association route ↔ leçon, et le découpage paresseux par famille |
-| `storage.ts` | accès unique à `localStorage` | leçons visitées, concepts lus, préférence de mouvement réduit, locale. Interface réimplémentable en appels réseau |
-| `reducedMotion.ts` | préférence à trois états — `système` / `forcé actif` / `forcé inactif` | la valeur effective que toutes les scènes lisent |
-| `perf.ts` | compteur d'images par seconde, indicateur `layout · paint · composite` | les métriques, activées seulement sur les leçons qui les déclarent |
+| `lessonRegistry.ts` | découverte et chargement des descripteurs, par famille | l'association route ↔ leçon, le découpage paresseux, et `globalIndex` — le compteur `n / 25` est l'index de la leçon dans le catalogue, pas un décompte de visites |
+| `reducedMotion.ts` | préférence à trois états — `système` / `forcé actif` / `forcé inactif` | la valeur effective. `watchSystemPreference()` est **appelé explicitement** : un effet de bord à l'import s'exécute avant que rien puisse l'observer |
+| `easings.ts` | catalogue des six courbes | leur forme CSS **et** leurs points de contrôle, dont les vignettes SVG sont tracées |
+| `redraw.ts` | signal « le temps a bougé, redessine » | le seul couplage entre ce qui fait avancer le temps et ce qui dessine. `frameloop="demand"` ne redessine pas sans lui |
+| `diagnostics.ts` | `window.__anima` — horloges vivantes, ressources WebGL, position du sujet | la seule observabilité du point 7 : `document.getAnimations()` est aveugle aux animations à cible nulle |
+| `storage.ts` | *(lot 7)* accès unique à `localStorage` | leçons visitées, concepts lus, locale |
+| `perf.ts` | *(lot 3)* indicateur `layout · paint · composite` | les métriques des leçons qui les déclarent |
 
 ### `shell/` — le gabarit, ignorant des leçons
 
@@ -63,21 +65,26 @@ Interface commune : `mount / play / pause / seek(progress) / setParams / dispose
 
 | Fichier | Rôle | Point d'attention |
 |---|---|---|
-| `CanvasHost` | **le** `<Canvas>` react-three-fiber, unique et persistant, monté haut dans l'arbre | seul son contenu change selon la route. Ne jamais le remonter |
-| `WebglScene` | cube isométrique + sol quadrillé | `frameloop="demand"` quand l'animation n'est pas continue |
-| `CssCubeScene` | 6 divs en `preserve-3d` | doit être visuellement superposable au cube WebGL — c'est ce qui rend `engineToggle` crédible |
-| `DomGridScene` | 12 à 200 tuiles | le nombre est un paramètre de leçon, jamais une constante |
-| `ScrollColumnScene` | cube fixé + contenu défilant | conteneur à défilement propre, ne défile pas la page |
+| `CanvasLayer` | le calque, **chargé paresseusement** | sans lui, three.js part dans le chunk de la route initiale — mesuré à 332 ko gzip |
+| `CanvasHost` | **le** `<Canvas>`, unique et persistant, calé sur le rectangle publié par le shell | changer de leçon met à jour un style, jamais un montage. `zIndex: 1` — sans lui il rend **sous** le fond de la scène |
+| `PerspectiveRig` | caméra perspective à longue focale | la maquette montre un sol en perspective, pas isométrique. La longue focale garde l'échelle presque constante, donc l'espacement des fantômes lisible |
+| `WebglScene` | cube, sol, trace de fantômes | lit les valeurs **hors de React** ; publie la projection de l'axe et la position du sujet |
+| `SceneOverlay` | fil d'Ariane, pilule de propriété, graduations, mesures `x · t · fps` | les repères sont placés par **projection** de leur valeur : ils mesurent, ils ne décorent pas |
+| `floorTexture` | sol dessiné dans un canvas 2D, fondu vers l'horizon | le brouillard de three.js mélangerait vers une couleur opaque, visible sur un canvas transparent |
+| `projection` / `sceneStore` | où tombe une abscisse ; ce que le canvas doit dessiner | le store porte une **donnée**, jamais un élément React |
+| `CssCubeScene` | *(lot 3)* 6 divs en `preserve-3d` | doit être superposable au cube WebGL |
+| `DomGridScene` | *(lot 3)* 12 à 200 tuiles | le nombre est un paramètre de leçon |
+| `ScrollColumnScene` | *(lot 4)* cube fixé + contenu défilant | conteneur à défilement propre |
 
 ### `transport/` — piloter le temps sans passer par React
 
 | Fichier | Rôle |
 |---|---|
 | `TransportBar` | trois variantes — `timeline`, `scroll`, `none` — même emplacement, même hauteur |
-| `drivers/gsap.ts` | pilote une timeline GSAP |
-| `drivers/waapi.ts` | pilote une `Animation` WAAPI |
-| `drivers/css.ts` | pilote une animation CSS |
-| `drivers/raf.ts` | pilote une boucle de rendu WebGL |
+| `drivers/waapi.ts` | une `Animation` à **cible nulle** : elle n'anime rien, elle sert d'horloge. Le navigateur applique la courbe, la scène lit `getComputedTiming().progress` |
+| `drivers/gsap.ts` | *(lot 5)* timeline GSAP |
+| `drivers/css.ts` | *(lot 3)* animation CSS |
+| `drivers/raf.ts` | *(lot 3)* boucle de rendu WebGL |
 
 Les quatre implémentent `TimeDriver`. Le scrub agit sur le driver, **jamais** sur l'état
 React. Une interface, pas des conditions dispersées dans le composant.
@@ -112,6 +119,8 @@ lessons/<famille>/<leçon>/
   animation.ts     la fonction d'animation, seul code spécifique à la leçon
   concept.fr.md    150 à 300 mots, chargé à la demande (concept.en.md au lot 8)
 ```
+
+**La procédure exacte pour en ajouter une est dans `CLAUDE.md`.** Écrite : `native/tween`.
 
 Familles : `native/` (10), `gsap/` (10), `shaders/` (5). Si une leçon demande un quatrième
 fichier, c'est un signal à remonter — pas à absorber en silence.

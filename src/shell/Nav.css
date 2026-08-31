@@ -1,0 +1,133 @@
+.nav {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: var(--z-chrome);
+  border-bottom: 1px solid var(--ligne);
+}
+
+.nav__row {
+  display: flex;
+  width: 100%;
+  max-width: var(--app-width);
+  gap: var(--space-5);
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+}
+
+/*
+ * Le séparateur vit sur une bande **pleine largeur**, pas sur la rangée : celle-ci est
+ * plafonnée à la largeur de référence, si bien que son trait s'arrêtait au milieu de
+ * l'écran alors que celui du bas courait d'un bord à l'autre.
+ */
+.nav__band {
+  border-bottom: 1px solid var(--ligne);
+}
+
+.nav__row--families {
+  height: 50px;
+}
+
+.nav__row--lessons {
+  height: 40px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.nav__brand {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  font-weight: 600;
+}
+
+.nav__logo {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+.nav__families {
+  display: flex;
+  flex: 1;
+  gap: var(--space-6);
+  justify-content: center;
+}
+
+.nav__family {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2) 0;
+  color: var(--encre-sourde);
+  border-bottom: 2px solid transparent;
+  transition: color var(--duration-select) var(--ease-ui);
+}
+
+.nav__dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.45;
+}
+
+.nav__family[aria-current="page"] {
+  color: var(--encre);
+  border-bottom-color: var(--accent);
+}
+
+.nav__family[aria-current="page"] .nav__dot {
+  opacity: 1;
+}
+
+.nav__aside {
+  display: inline-flex;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.nav__counter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--encre-sourde);
+}
+
+.nav__lesson {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 11px;
+  font-size: 12px;
+  color: var(--encre-sourde);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  transition:
+    color var(--duration-hover) var(--ease-ui),
+    border-color var(--duration-hover) var(--ease-ui);
+}
+
+.nav__lesson:hover {
+  border-color: var(--ligne-12);
+}
+
+.nav__lesson[aria-current="page"] {
+  /* Nom de la leçon active en 600, comme la maquette — et en pleine encre, pas en sourde. */
+  font-weight: 600;
+  color: var(--encre);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.nav__lesson-order {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--encre-sourde);
+}
+
+.nav__lesson[aria-current="page"] .nav__lesson-order {
+  color: var(--accent-clair);
+}

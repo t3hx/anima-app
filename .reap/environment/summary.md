@@ -5,32 +5,51 @@ Résumé chargé à chaque session. Le détail de la structure des modules vit d
 
 ## État actuel du dépôt
 
-La chaîne d'outils est en place ; **aucun code produit n'est encore écrit**. Les dossiers
-de la structure §12 existent, vides, avec leurs alias configurés et vérifiés par test.
+**Le lot 1 est livré** : le contrat de données, le shell générique et une leçon complète —
+`native-tween`. 186 tests unitaires, 64 scénarios Playwright.
 
 ```
 .
-├── index.html
-├── package.json            sept scripts, tous vérifiés
-├── tsconfig.json           strict + noUncheckedIndexedAccess, noImplicitOverride,
-│                           exactOptionalPropertyTypes, verbatimModuleSyntax
-├── vite.config.ts          plugin React, 9 alias, et la config Vitest (jsdom)
-├── biome.json              2 espaces, guillemets simples, points-virgules au besoin, largeur 100
-├── playwright.config.ts    testDir tests/e2e, webServer sur vite preview :4173
+├── CLAUDE.md               conventions, commandes, **procédure d'ajout d'une leçon**
+├── index.html              polices Google (Instrument Sans, IBM Plex Mono)
+├── vite.config.ts          9 alias, config Vitest, entrée conditionnelle du harnais e2e
 ├── src/
-│   ├── main.tsx App.tsx App.test.tsx vite-env.d.ts
-│   ├── test/               setup.ts, aliases.test.ts
-│   └── shell/ scenes/ transport/drivers/ controls/ code/ i18n/ lessons/ core/
-│                           vides (.gitkeep) — remplis au lot 1
-├── tests/e2e/smoke.spec.ts
-├── design/                 spécification et maquettes
-└── .reap/
+│   ├── core/               contrat, store, registre, courbes, mouvement réduit,
+│   │                       redessin, diagnostics
+│   ├── shell/              routes, Nav, LessonShell, LessonRoute, FamilyRoute, Home,
+│   │                       useLessonDriver
+│   ├── scenes/             CanvasLayer, CanvasHost, WebglScene, PerspectiveRig,
+│   │                       SceneOverlay, floorTexture, projection, sceneStore
+│   ├── transport/          TimeDriver, TransportBar, drivers/waapi
+│   ├── controls/           ControlPanel + slider, choice, toggle, ease, ValueReadout
+│   ├── code/               generate, CodePanel, useDeferredValues
+│   ├── i18n/               fr, en, translate, localeStore
+│   ├── lessons/native/tween/  lesson.ts, animation.ts, concept.fr.md
+│   └── styles/             tokens.css, base.css
+├── tests/e2e/              12 fichiers, dont harness/ (banc d'essai du driver)
+└── design/                 spécification et maquettes
 ```
 
-`design/spec-technique-anima-lab.md` est la source de vérité comportementale : 14 sections
-couvrant le produit, la stack, l'architecture, les briques, la performance, l'i18n, le
-déploiement, l'accessibilité, le plan de livraison en 8 lots, et la définition du
-« terminé ». Les maquettes décrivent l'apparence, la spec décrit le comportement.
+## Ce qu'il faut savoir pour toucher au code
+
+**Le contrat a cinq champs absents de la spec §3**, chacun imposé par un cas réel :
+`ParamValues`, `Lesson.slug`, `Lesson.animate`, `Lesson.timing`, `Param.visibleWhen`.
+
+**Trois environnements, trois limites :**
+
+| | Ce qui n'y marche pas |
+|---|---|
+| jsdom | aucune API Web Animations, aucun WebGL, un `input[type=range]` ne bouge pas aux flèches |
+| Playwright | Chromium seul est installé |
+| `frameloop="demand"` | rien ne se redessine sans un appel à `requestRedraw` (`@core/redraw`) |
+
+**Les diagnostics sont exposés sur `window.__anima`** : `liveDrivers()`, `webgl()`,
+`subject()`. Le point 7 du « terminé » n'est pas observable autrement —
+`document.getAnimations()` est aveugle aux animations à cible nulle, ce qui est mesuré et
+figé par un test.
+
+**Le harnais e2e** (`tests/e2e/harness/`) n'entre dans le build que sous `E2E_HARNESS`,
+posé par le `webServer` de Playwright. Il exerce le driver WAAPI dans un vrai navigateur.
 
 ## Environnement de développement
 
@@ -53,6 +72,10 @@ Versions installées :
 | `vitest` | 4.1.11 |
 | `@testing-library/react` | 16.3.3 |
 | `@playwright/test` | 1.62.1 (chromium seul installé) |
+| `three` / `@react-three/fiber` / `@react-three/drei` | 0.185.1 / 9.7.0 / 10.7.8 |
+| `zustand` | 5.0.15 |
+| `react-router` | 8.3.1 |
+| `pngjs` | lecture des pixels dans les scénarios Playwright |
 | `jsdom` | 30.0.1 |
 
 **Piège à connaître : TypeScript 7 a supprimé `baseUrl`.** Les mappings de `paths` doivent
@@ -76,10 +99,10 @@ Les tests unitaires vivent à côté du code (`src/**/*.test.{ts,tsx}`), le bout
 
 ## Dépôt et branches
 
-Remote `origin` : `git@github.com:t3hx/anima-app.git` — dépôt **privé**, créé et vide
-(aucun push effectué à ce jour).
+Remote `origin` : `git@github.com:t3hx/anima-app.git` — dépôt **privé**. `dev` porte le
+lot 0 ; le lot 1 arrive par `feat/native-tween-vertical-slice`.
 
-Branches : `main`, `dev` (créée depuis `main`), `init` (worktree courant).
+Branches : `main`, `dev` (créée depuis `main`).
 Modèle à deux branches permanentes : `dev` est la branche de travail, `main` reflète ce
 qui est déployé — un push sur `main` est un déploiement.
 
