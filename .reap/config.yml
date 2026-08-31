@@ -6,3 +6,4 @@ strictMerge: false
 agentClient: claude-code
 autoUpdate: true
 autoIssueReport: true
+lastMigratedVersion: 0.17.7

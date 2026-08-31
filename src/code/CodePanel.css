@@ -1,0 +1,112 @@
+.code-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--braise-950);
+  border: 1px solid var(--ligne);
+  border-radius: var(--radius-code);
+}
+
+.code-panel__head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+}
+
+.code-panel__glyph {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.code-panel__preview {
+  flex: 1;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--encre-sourde);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.code-panel__tabs {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2);
+}
+
+.code-panel__tab {
+  padding: 2px var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--encre-sourde);
+  border-radius: var(--radius-pill);
+}
+
+.code-panel__tab[aria-selected="true"] {
+  color: var(--encre);
+  background: var(--ligne-10);
+}
+
+.code-panel__copy {
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-clair);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: var(--radius-field);
+}
+
+.code-panel__chevron {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--encre-sourde);
+  border-radius: var(--radius-field);
+}
+
+.code-panel__chevron:hover {
+  color: var(--encre);
+  background: var(--ligne-10);
+}
+
+.code-panel__lines {
+  /*
+   * Hauteur naturelle, **aucun défilement vertical** : le tiroir montre tout le code, et
+   * c'est le rail qui descend d'autant. Une zone de code qui défile à l'intérieur d'une
+   * colonne qui défile elle-même est précisément ce qu'il ne faut pas faire.
+   */
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-4);
+  overflow-x: auto;
+}
+
+.code-panel__line {
+  display: block;
+  padding: 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre;
+  border-radius: var(--radius-field);
+}
+
+/*
+ * Une ligne vide doit occuper une ligne. Un `<code>` sans contenu n'a pas de boîte de
+ * ligne : les respirations écrites dans le gabarit disparaissaient purement et simplement.
+ */
+.code-panel__line:empty::before {
+  content: "\00a0";
+}
+
+.code-panel__line[data-highlighted="true"] {
+  color: var(--accent-clair);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+}

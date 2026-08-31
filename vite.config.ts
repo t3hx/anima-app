@@ -8,8 +8,24 @@ import { defineConfig } from 'vitest/config'
 // import réel, bien trop tard.
 const alias = (segment: string) => fileURLToPath(new URL(`./src/${segment}`, import.meta.url))
 
+// Le banc d'essai du driver (tests/e2e/harness) n'est ajouté comme entrée que sous
+// `E2E_HARNESS`, posé par le `webServer` de Playwright. Il ne part donc jamais en
+// production, mais il exerce le vrai module dans un vrai navigateur — ce que jsdom ne
+// peut pas faire, faute d'implémenter la moindre API Web Animations.
+const harnessInput = process.env.E2E_HARNESS
+  ? { harness: fileURLToPath(new URL('./tests/e2e/harness/index.html', import.meta.url)) }
+  : {}
+
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        ...harnessInput,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': alias(''),

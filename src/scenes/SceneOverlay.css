@@ -1,0 +1,110 @@
+/*
+ * Décors « banc d'essai » posés au-dessus de la scène. Ils ne captent aucun clic : le
+ * canvas WebGL est en dessous, et rien ici ne doit s'interposer.
+ */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-chrome);
+  pointer-events: none;
+}
+
+.overlay__head {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-5);
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.overlay__crumb {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--encre-sourde);
+  letter-spacing: 0.12em;
+}
+
+/* Pilule de propriété : c'est du code, donc monospace et jamais traduit. */
+.overlay__property {
+  padding: 2px var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-clair);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: var(--radius-pill);
+}
+
+.overlay__ruler {
+  position: absolute;
+  opacity: 0.9;
+}
+
+.overlay__ruler--left {
+  top: 44px;
+  bottom: 52px;
+  left: 14px;
+  width: 7px;
+  background: repeating-linear-gradient(0deg, rgb(242 233 220 / 14%) 0 1px, transparent 1px 22px);
+}
+
+/*
+ * L'axe des abscisses. Chaque repère est positionné par la **projection de sa valeur** : il
+ * tombe exactement sous le point de la scène qui vaut ce chiffre. L'espacement n'est donc
+ * pas régulier — c'est la perspective, et c'est précisément ce qu'un banc d'essai doit
+ * montrer plutôt que masquer.
+ */
+.overlay__axis {
+  position: absolute;
+  right: 0;
+  bottom: 18px;
+  left: 0;
+  height: 22px;
+}
+
+.overlay__mark {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--encre-sourde);
+  transform: translateX(-50%);
+}
+
+.overlay__tick {
+  width: 1px;
+  height: 8px;
+  background: rgb(242 233 220 / 28%);
+}
+
+.overlay__mark {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--encre-sourde);
+  opacity: 0.7;
+}
+
+/* Encart de mesures, en bas à droite — lisible en permanence. */
+.overlay__measures {
+  /*
+   * Au-dessus de l'axe, pas dessus : l'encart masquait les repères 5 et 10, c'est-à-dire
+   * précisément la zone où le sujet arrive.
+   */
+  position: absolute;
+  right: var(--space-5);
+  bottom: 48px;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--encre-sourde);
+  background: rgb(20 16 13 / 80%);
+  border: 1px solid var(--ligne-10);
+  border-radius: 9px;
+}

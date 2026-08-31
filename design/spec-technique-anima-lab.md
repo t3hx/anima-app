@@ -148,7 +148,7 @@ La bascule `engineToggle` intervertit `webgl` et `css-cube` sans remonter le res
 
 Trois variantes, même emplacement et même hauteur.
 
-- **`timeline`** : retour au début, lecture/pause, boucle, scrub, temps écoulé / durée, vitesse (`0.25×` à `4×`, valeurs négatives incluses). Le scrub pilote la progression normalisée, quelle que soit la technologie sous-jacente.
+- **`timeline`** : retour au début, lecture/pause, boucle, scrub, temps écoulé / durée. Le sélecteur de vitesse a été **retiré au lot 1** sur décision de l'humain : il fonctionnait, mais n'apportait rien à la leçon. `TimeDriver.setRate` demeure, pour les leçons où la vitesse *est* le sujet. Le scrub pilote la progression normalisée, quelle que soit la technologie sous-jacente.
 - **`scroll`** : position de défilement, plus deux poignées déplaçables matérialisant les bornes de déclenchement (`animation-range`).
 - **`none`** : la barre disparaît, la scène récupère l'espace.
 
@@ -211,7 +211,7 @@ Effet attendu quand il est actif : **les démos ne disparaissent pas**, elles pa
 - Distinction à tenir : les **libellés techniques** (`duration`, `from`, `translateX`) ne se traduisent pas et restent en monospace ; les **gloses** et les titres se traduisent.
 - Textes des concepts : `lessons/<famille>/<leçon>/concept.fr.md`, `concept.en.md`. Chargement dynamique selon la locale, repli sur le français si le fichier manque.
 - Le code affiché dans le panneau ne se traduit jamais, commentaires compris — sauf à prévoir des commentaires par locale dans le `CodeTemplate`, ce que je déconseille pour le MVP.
-- Routes préfixées par la locale (`/fr/socle/tween`) dès le MVP : ajouter le préfixe après coup casse toutes les URL déjà partagées.
+- Routes préfixées par la locale dès le MVP : ajouter le préfixe après coup casse toutes les URL déjà partagées. Le segment de famille reste **stable en anglais** quelle que soit la locale — `/fr/native/tween`, `/en/native/tween` — pour que changer de langue soit un simple remplacement de préfixe (décision arbitrée au lot 1).
 
 **Rédaction des concepts** : le texte de chaque leçon est écrit au fil des lots, en même temps que la leçon. Une leçon dont le concept est un texte de remplissage n'est pas terminée (section 10).
 
@@ -244,7 +244,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 Points à ne pas oublier dans la configuration nginx :
 
-- `try_files $uri $uri/ /index.html;` — sans cette ligne, un accès direct à `/fr/socle/tween` renvoie une 404, ce qui casse précisément la fonctionnalité de partage d'URL décrite en 4.7.
+- `try_files $uri $uri/ /index.html;` — sans cette ligne, un accès direct à `/fr/native/tween` renvoie une 404, ce qui casse précisément la fonctionnalité de partage d'URL décrite en 4.7.
 - Cache long et immuable sur les fichiers hachés de `assets/`, aucun cache sur `index.html`.
 - Compression brotli ou gzip activée : les bundles Three.js et GSAP en dépendent fortement.
 - Types MIME corrects pour `.wasm` si une dépendance en introduit.

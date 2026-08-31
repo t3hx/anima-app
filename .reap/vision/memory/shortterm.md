@@ -1,37 +1,29 @@
 # Shortterm Memory
 
-## Handoff — après `gen-001-76ea93` (lot 0, chaîne d'outils)
+## Handoff — après `gen-002-039410` (lot 1, tranche verticale `native-tween`)
 
-La chaîne d'outils est posée et vérifiée. Sept commandes passent depuis un `npm ci`
-propre : `dev`, `build`, `preview`, `typecheck`, `check`, `test`, `test:e2e`.
-Aucun code produit n'existe.
+Le lot 1 est livré et validé : contrat de données, store, registre, routage, i18n, canvas
+persistant, scène WebGL, driver WAAPI, transport, quatre contrôles, panneau de code, et la
+leçon `native-tween` complète avec son concept de 297 mots.
 
-**Commité** en `6f183dc` sur `chore/bootstrap-toolchain`, validé par l'humain. Non poussé :
-le dépôt distant `t3hx/anima-app` est toujours vide. La branche n'est pas encore fusionnée
-dans `dev`.
+**186 tests unitaires, 64 scénarios de bout en bout**, route initiale à 97,93 ko gzip.
+`CLAUDE.md` est rédigé, avec la procédure d'ajout d'une leçon.
 
-**Prochaine étape : lot 1**, EPIC `T3H-111` — la tranche verticale `native-tween`.
-Commencer par `core/types.ts` (le contrat), avant tout composant. Neuf FEAT découpées,
-`T3H-139` à `T3H-159`.
+**Prochaine étape : lot 2**, EPIC `T3H-112` — `easing` et `waapi`, en n'écrivant **que** des
+descripteurs et des fonctions d'animation. C'est le juge du contrat.
 
-## Décisions tranchées en phase adapt
+## Ce qu'il faut savoir avant de reprendre
 
-- **Budget : 200 ko gzip**, mesurés sur le chunk de la route initiale, hors chunks par
-  famille et hors Three.js. Génome et spec §6 corrigés. React consomme 60,02 ko, il reste
-  ~140 ko.
-- **Mode embryo maintenu jusqu'à la fin du lot 2** : le contrat de données n'a pas encore
-  été mis à l'épreuve, le génome doit rester corrigeable si le lot 2 le prend en défaut.
+- **Le contrat a gagné cinq champs** que la spec §3 n'avait pas : `ParamValues`, `slug`,
+  `animate`, `timing`, `visibleWhen`. Chacun imposé par un cas réel, aucun par anticipation.
+- **Le mode embryo devait s'arrêter à la fin du lot 2.** Le contrat n'a toujours pas été
+  éprouvé sur une deuxième leçon.
+- **Le génome et la spec §7 disent encore `/fr/socle/tween`.** Les routes sont
+  `/fr/native/tween` — segments stables en anglais, décision D2 du plan. À corriger en
+  phase adapt.
+- **La spec §4.3 demande un sélecteur de vitesse**, retiré sur demande explicite de
+  l'humain. L'écart est consigné dans `TransportBar.tsx`.
 
 ## En attente
 
-- **Push.** Le lot 0 est commité (`6f183dc`) mais rien n'est poussé ; `t3hx/anima-app` est
-  toujours vide. Aucun push sans demande explicite de l'humain.
-
-## Backlog
-
-| Élément | État |
-|---|---|
-| `clarify-the-200-kb-initial-js-budget-compressed-or-raw.md` | **done** — tranché en gzip, génome et spec corrigés |
-| `update-environment-summary-with-the-real-toolchain.md` | **done** — appliqué en phase reflect |
-
-Aucun backlog en attente pour le lot 1.
+Rien n'est poussé ni fusionné à la clôture de cette génération.

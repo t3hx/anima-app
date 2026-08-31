@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from '@/App'
+import '@/styles/base.css'
 
 // StrictMode monte les composants deux fois en développement. C'est délibéré :
 // toute animation ajoutée plus tard doit être idempotente et correctement nettoyée.

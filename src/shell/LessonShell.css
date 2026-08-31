@@ -1,0 +1,78 @@
+/*
+ * La mise en page de l'écran de leçon.
+ *
+ * Trois règles, et chacune vient d'un défaut constaté :
+ *
+ *  1. **La scène a une taille propre**, tirée de sa largeur et du rapport 1,41 du handoff.
+ *     Elle ne dépend ni du nombre de blocs de contrôles, ni de la longueur du code :
+ *     masquer le bloc COURBE aplatissait toute la démonstration.
+ *  2. **Les deux colonnes ont chacune leur hauteur.** Le rail prend la sienne et peut
+ *     descendre un peu plus bas que la barre de transport. L'aligner de force obligeait
+ *     l'un des deux à défiler, et une barre de défilement au milieu de l'interface casse
+ *     le dessin.
+ *  3. **Le corps a ses propres marges**, plus courtes que celles du chrome. Rien n'oblige
+ *     les deux à s'accorder, et la scène y gagne de la place.
+ */
+
+.lesson {
+  /*
+   * La largeur est bornée **par la hauteur disponible**.
+   *
+   * La scène tire sa hauteur de sa largeur (rapport 1,41) : sans cette borne, un écran
+   * large mais court la faisait déborder sous le pli, et la barre de transport se
+   * retrouvait hors champ. On calcule donc la largeur maximale que la fenêtre peut
+   * accueillir : hauteur restante × 1,41, plus le rail et les gouttières.
+   *
+   * `--chrome-space` : les deux rangées du chrome (91), les marges verticales du corps
+   * (28), la gouttière scène/transport (14) et la barre elle-même (52).
+   */
+  --chrome-space: 185px;
+  --fits-height: calc((100vh - var(--chrome-space)) * 1.41 + 344px + 42px);
+
+  display: grid;
+  width: 100%;
+  max-width: min(var(--body-width), var(--fits-height));
+  align-items: start;
+  grid-template-columns: 1fr 344px;
+  gap: 14px;
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.lesson__stage {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lesson__scene {
+  position: relative;
+  z-index: var(--z-scene);
+  width: 100%;
+  flex: 0 0 auto;
+  aspect-ratio: 1.41;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 28%, #251d16 0%, #161210 72%);
+  border: 1px solid var(--ligne);
+  border-radius: var(--radius-block);
+}
+
+.scene-view {
+  width: 100%;
+  height: 100%;
+}
+
+.lesson__rail {
+  position: relative;
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Le tiroir de code ferme le rail, sous les blocs de contrôles. */
+.lesson__code {
+  display: flex;
+  flex-direction: column;
+}

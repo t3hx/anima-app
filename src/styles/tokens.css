@@ -1,0 +1,128 @@
+/*
+ * Tokens du design — direction « Braise » (handoff 2a).
+ *
+ * Sept couleurs nommées plus trois accents de famille. Les trois accents partagent chroma
+ * et luminosité (oklch ≈ 0.76 / 0.13) : seule la teinte varie, ce qui permet de recolorer
+ * tout un écran sans toucher aux contrastes.
+ *
+ * Règle typographique absolue : la monospace marque **uniquement ce qui est du code réel**
+ * (`position.x`, `duration`, valeurs copiables). Tout ce qui est explicatif est en sans.
+ */
+
+:root {
+  /* Fonds */
+  --braise-950: #14100d; /* fond des blocs code, barres overlay */
+  --braise-900: #1c1815; /* fond application */
+  --braise-800: #26211c; /* cartes, rail de contrôles, panneaux */
+
+  /* Bordures et séparateurs */
+  --ligne: rgb(242 233 220 / 8%);
+  --ligne-10: rgb(242 233 220 / 10%);
+  --ligne-12: rgb(242 233 220 / 12%);
+  --ligne-14: rgb(242 233 220 / 14%);
+
+  /* Texte */
+  --encre: #f2e9dc;
+  --encre-sourde: #a2907c; /* gloses, labels de bloc, valeurs secondaires */
+
+  /* Accents de famille */
+  --ambre: #f09d5a;
+  --ambre-clair: #f0b678;
+  --encre-sur-ambre: #221507;
+
+  --coral: #ee6c4d;
+  --coral-clair: #f0876b;
+  --encre-sur-coral: #2a120a;
+
+  --rose: #d96a8f;
+  --rose-clair: #e694ae;
+
+  /* Accent actif — réécrit par la famille courante */
+  --accent: var(--ambre);
+  --accent-clair: var(--ambre-clair);
+  --encre-sur-accent: var(--encre-sur-ambre);
+
+  /*
+   * Empilement. Le canvas WebGL couvre la fenêtre entière et se glisse entre le fond des
+   * scènes et l'interface : au-dessus des aplats de scène, en dessous des contrôles.
+   */
+  --z-scene: 0;
+  --z-canvas: 1;
+  --z-chrome: 2;
+
+  /*
+   * Deux largeurs, et c'est délibéré. Rien n'oblige le chrome et le corps à partager leurs
+   * marges : en donnant au corps des marges plus courtes, la scène gagne de la place sans
+   * que la barre de menu paraisse étirée.
+   */
+  --app-width: 1180px;
+  --body-width: 1520px;
+
+  /* Typographie */
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", menlo, monospace;
+
+  /* Espacement */
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 24px;
+
+  /* Rayons */
+  --radius-field: 6px;
+  --radius-control: 10px;
+  --radius-code: 12px;
+  --radius-block: 14px;
+  --radius-pill: 99px;
+
+  /*
+   * Mouvement d'interface. Trois durées, pas une de plus.
+   * Règle du projet : la scène est la seule chose qui a le droit de bouger fort.
+   * Aucune animation d'interface pendant qu'une démo joue, hors feedback direct du
+   * contrôle manipulé.
+   */
+  --ease-ui: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-panel: cubic-bezier(0.3, 0.8, 0.3, 1);
+  --duration-hover: 120ms;
+  --duration-select: 200ms;
+  --duration-panel: 320ms;
+}
+
+[data-family="native"] {
+  --accent: var(--ambre);
+  --accent-clair: var(--ambre-clair);
+  --encre-sur-accent: var(--encre-sur-ambre);
+}
+
+[data-family="gsap"] {
+  --accent: var(--coral);
+  --accent-clair: var(--coral-clair);
+  --encre-sur-accent: var(--encre-sur-coral);
+}
+
+[data-family="shaders"] {
+  --accent: var(--rose);
+  --accent-clair: var(--rose-clair);
+  --encre-sur-accent: var(--encre-sur-ambre);
+}
+
+/*
+ * Mouvement réduit : les transitions d'interface disparaissent. Les démos, elles, ne
+ * disparaissent pas — elles passent en lecture manuelle (spec §4.8). C'est la scène qui
+ * gère cela, pas cette feuille de style.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-hover: 0ms;
+    --duration-select: 0ms;
+    --duration-panel: 0ms;
+  }
+}
+
+:root[data-reduced-motion="true"] {
+  --duration-hover: 0ms;
+  --duration-select: 0ms;
+  --duration-panel: 0ms;
+}

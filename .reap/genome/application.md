@@ -39,10 +39,23 @@ comportement ; les maquettes décrivent l'apparence.
 en couches par responsabilité, pas en composants par leçon.
 
 **Le pivot : un contrat de données.** `Lesson`, `Param`, `CodeTemplate`, `CodeLine` sont
-écrits en premier, avant tout composant. Un shell générique lit un `Lesson` et construit
-l'écran ; il n'a aucune connaissance des leçons individuelles. Une leçon = un dossier =
-trois fichiers (`lesson.ts` descripteur, `animation.ts`, `concept.fr.md`). Si une leçon
-en exige davantage, c'est un signal à remonter.
+écrits en premier, avant tout composant.
+
+Le lot 1 lui a ajouté cinq champs que la spec §3 n'avait pas, chacun imposé par un cas réel
+et aucun par anticipation : `ParamValues` (référencé sans être défini), `Lesson.slug` (le
+segment d'URL, distinct de l'`id`), `Lesson.animate` (la fonction d'animation), `Lesson.timing`
+(la durée et la courbe demandées au driver) et `Param.visibleWhen` (un paramètre qui n'a pas
+de sens pour tous les réglages).
+
+**`timing` mérite d'être compris avant d'être copié** : le gabarit de code et le driver
+doivent lire la **même** fonction. Les séparer a produit un écran qui affichait `linear`
+pendant que le navigateur appliquait `ease-out`. Sur ce site, le code affiché *est* le
+produit : il ne peut pas mentir.
+
+Un shell générique lit un `Lesson` et construit l'écran ; il n'a aucune connaissance des
+leçons individuelles. Une leçon = un dossier = trois fichiers (`lesson.ts` descripteur,
+`animation.ts`, `concept.fr.md`). Si une leçon en exige davantage, c'est un signal à
+remonter.
 
 **Flux de données — une seule source de vérité.** Le store Zustand des paramètres de la
 leçon en cours alimente trois consommateurs :
@@ -231,8 +244,10 @@ site de 25 scènes est le risque numéro un — le canvas persiste, son contenu 
 **Internationalisation.** MVP en français, bilingue français/anglais à terme. L'anglais
 n'est pas implémenté maintenant, mais **aucune chaîne traduisible ne doit être écrite en
 dur** — c'est la seule dette non rattrapable à moindre coût. Routes préfixées par la
-locale (`/fr/socle/tween`) dès le MVP : ajouter le préfixe après coup casse toutes les URL
-déjà partagées. Distinction à tenir : les libellés techniques (`duration`, `translateX`)
+locale dès le MVP : ajouter le préfixe après coup casse toutes les URL déjà partagées. Le
+**segment de famille reste stable en anglais** quelle que soit la locale — `/fr/native/tween`
+et `/en/native/tween` — de sorte que changer de langue soit un remplacement de préfixe, sans
+table de correspondance ni URL à réécrire. Distinction à tenir : les libellés techniques (`duration`, `translateX`)
 ne se traduisent pas et restent en monospace ; les gloses et les titres se traduisent. Le
 code affiché ne se traduit jamais, commentaires compris.
 

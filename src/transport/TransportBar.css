@@ -1,0 +1,154 @@
+/*
+ * La barre de transport, aux valeurs du handoff.
+ *
+ * Les commandes y sont des **carrés arrondis de 32 px, rayon 9** — toutes de la même
+ * taille. Notre version les avait rondes et de tailles inégales, ce qui donnait un rythme
+ * approximatif là où la maquette est réglée. La barre elle-même porte un contour net.
+ */
+
+.transport {
+  position: relative;
+  z-index: var(--z-chrome);
+  display: flex;
+  height: 52px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  background: var(--braise-800);
+  border: 1px solid var(--ligne);
+  border-radius: var(--radius-code);
+}
+
+.transport__button {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--encre);
+  background: rgb(242 233 220 / 6%);
+  border-radius: 9px;
+  transition:
+    background var(--duration-hover) var(--ease-ui),
+    color var(--duration-hover) var(--ease-ui);
+}
+
+.transport__button:hover {
+  background: var(--ligne-12);
+}
+
+.transport__button--primary {
+  color: var(--encre-sur-accent);
+  background: var(--accent);
+}
+
+.transport__button--primary:hover {
+  background: var(--accent-clair);
+}
+
+.transport__button[aria-pressed="true"] {
+  color: var(--accent-clair);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.transport__track {
+  --progress: 0;
+
+  position: relative;
+  flex: 1;
+  height: 20px;
+}
+
+/*
+ * Piste de 6 px, graduée tous les 10 % — les graduations sont **dans** la piste, comme le
+ * handoff les dessine, et non sur toute la hauteur de la zone.
+ */
+.transport__track::before {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 6px;
+  background: rgb(242 233 220 / 10%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(242 233 220 / 14%) 0 1px,
+    transparent 1px 10%
+  );
+  border-radius: 3px;
+  transform: translateY(-50%);
+  content: "";
+}
+
+/* Remplissage en dégradé, de la braise à l'accent. */
+.transport__track::after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: calc(var(--progress) * 100%);
+  height: 6px;
+  background: linear-gradient(90deg, #b9622f, var(--accent));
+  border-radius: 3px;
+  transform: translateY(-50%);
+  content: "";
+}
+
+.transport__scrub {
+  /* Même cause qu'au rail : la piste est un pseudo-élément peint après l'input. */
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+}
+
+.transport__scrub::-webkit-slider-runnable-track {
+  height: 20px;
+  background: transparent;
+}
+
+.transport__scrub::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
+  background: #f6e3cd;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+  appearance: none;
+}
+
+.transport__scrub:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.transport__scrub::-moz-range-track {
+  height: 20px;
+  background: transparent;
+}
+
+.transport__scrub::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #f6e3cd;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+}
+
+/* Le temps est enfermé dans une pastille, comme la maquette. */
+.transport__time {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--encre);
+  white-space: nowrap;
+  background: rgb(242 233 220 / 6%);
+  border-radius: 8px;
+}
